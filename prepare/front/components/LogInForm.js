@@ -25,7 +25,7 @@ const LogInForm = () => {
 
     const dispatch =useDispatch();
 
-    const {isLoggingIn} = useSelector((state) => state.user);
+    const {logInLoading} = useSelector((state) => state.user);
 
     const [email, onChangeEmail] = useInput('');
     // const [id, setId] = useState('');
@@ -66,7 +66,7 @@ const LogInForm = () => {
                 />
             </div>
             <ButtonWrapper style={style}>
-                <Button type="primary" htmlType = "submit" loading={isLoggingIn}>LogIn</Button>
+                <Button type="primary" htmlType = "submit" loading={logInLoading}>LogIn</Button>
 
                 <Link href = "/register"><a><Button>Register</Button></a></Link>
                 

@@ -50,13 +50,12 @@ export const generateDummyPost = (number) => Array(number).fill().map(() => ({
 //initialState.mainPosts = initialState.mainPosts.concat(generateDummyPost(10));
 
 
-export const LOAD_POST_REQUEST = 'LOAD_POST_REQUEST';
 // 액션 이름을 상수로 지어주면 오타로 인한 에러 줄이는 데 도움됨
+export const LOAD_POST_REQUEST = 'LOAD_POST_REQUEST';
 export const LOAD_POST_SUCCESS = 'LOAD_POST_SUCCESS';
 export const LOAD_POST_FAILURE = 'LOAD_POST_FAILURE';
 
 export const ADD_POST_REQUEST = 'ADD_POST_REQUEST';
-// 액션 이름을 상수로 지어주면 오타로 인한 에러 줄이는 데 도움됨
 export const ADD_POST_SUCCESS = 'ADD_POST_SUCCESS';
 export const ADD_POST_FAILURE = 'ADD_POST_FAILURE';
 
@@ -87,7 +86,7 @@ export const addComment = (data) => ({
 const dummyPost = (data) => ({
     id:data.id,
     content: data.content,
-    User: {
+    User: {  
         id: 1,
         nickname: 'BP'
     },

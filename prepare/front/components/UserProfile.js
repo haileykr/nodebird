@@ -4,9 +4,9 @@ import { Card, Avatar, Button } from 'antd';
 
 import { logoutRequestAction } from '../reducers/user';
 
-const UserProfile = ({setIsLoggedIn}) => {
+const UserProfile = ({}) => {
     const dispatch = useDispatch();
-    const { me, isLoggingOut } = useSelector((state) => state.user)
+    const { me, logOutLoading } = useSelector((state) => state.user)
     const onLogOut = useCallback(() => {
         //setIsLoggedIn(false);
         dispatch(logoutRequestAction());
@@ -24,7 +24,7 @@ const UserProfile = ({setIsLoggedIn}) => {
                 avatar = {<Avatar>{me.nickname[0]}</Avatar>}
                 title = {me.nickname}
             />
-            <Button onClick={onLogOut} loading = {isLoggingOut}>Log Out</Button>
+            <Button onClick={onLogOut} loading={logOutLoading}>Log Out</Button>
         </Card>
     );
 
