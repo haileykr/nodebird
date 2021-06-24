@@ -5,6 +5,8 @@ const userRouter = require('./routes/user');
 
 const db = require('./models');
 
+const passportConfig =  require('./passports/index');
+
 const app = express();
 db.sequelize.sync()
     .then(() => {
@@ -13,6 +15,7 @@ db.sequelize.sync()
     .catch(
         console.error
     );
+passportConfig();
     
 app.use(cors({
     origin: '*', // fix it when in production
