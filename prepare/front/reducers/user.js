@@ -73,14 +73,14 @@ export const ADD_POST_TO_ME = "ADD_POST_TO_ME";
 
 export const REMOVE_POST_OF_ME = "REMOVE_POST_OF_ME";
 
-const dummyUser = (data) => ({
-  ...data,
-  nickname: "BP",
-  id: 1,
-  Posts: [{ id: 1 }],
-  Followings: [{ nickname: "ZP" }, { nickname: "AM" }, { nickname: "qqe" }],
-  Followers: [{ nickname: "ZP" }, { nickname: "AM" }, { nickname: "qqe" }],
-});
+// const dummyUser = (data) => ({
+//   ...data,
+//   nickname: "BP",
+//   id: 1,
+//   Posts: [{ id: 1 }],
+//   Followings: [{ nickname: "ZP" }, { nickname: "AM" }, { nickname: "qqe" }],
+//   Followers: [{ nickname: "ZP" }, { nickname: "AM" }, { nickname: "qqe" }],
+// });
 
 // THUNK쓸 때
 // DISPATCH를 여러 번 해줄 수 있는 기능
@@ -224,7 +224,7 @@ const reducer = (state = initialState, action) => {
         break;
       case LOG_IN_SUCCESS:
         draft.logInLoading = false;
-        draft.me = dummyUser(action.data);
+        draft.me = action.data;
         draft.logInDone = true;
         break;
       case LOG_IN_FAILURE:

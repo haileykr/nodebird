@@ -2,7 +2,7 @@ const express = require("express");
 const bcrypt = require("bcrypt");
 const passport = require("passport");
 
-const { User } = require("../models"); // index.js에서 db에 User가 담겨 exports되어 접근 가능해 짐!
+const { User, Post } = require("../models"); // index.js에서 db에 User가 담겨 exports되어 접근 가능해 짐!
 
 const router = express.Router();
 
@@ -19,17 +19,41 @@ router.post("/login", (req, res, next) => {
       return res.status(401).send(info.reason);
     }
 
-    return req.login(user, async (loginErr) => {
+    return req.login(user, async (loginError) => {
       //passport login
       if (loginError) {
         //if error during passportlogin
         console.error(loginError);
         return next(loginError);
       }
-      return res.json(user); //user info
+      const fullUserWithoutPassword =  await User.findOne({
+        where: {id: user.id},
+        attributes: 
+          // ['id', 'nickname', 'email'],
+          {
+            exclude: ['password']
+          },
+        include: [{
+          model: Post, 
+        }, {
+          model: User,
+          as: 'Followings',
+        }, {
+          model: User,
+          as: 'Followers',
+        }]
+      })
+      return res.status(200).json(fullUserWithoutPassword); //user info
     });
   })(req, res, next);
 }); //POST /user/login
+
+
+router.post("/logout", (req, res, next) => {
+  req.logout();
+  req.session.destroy();
+  res.send('ok')
+})
 
 router.post("/", async (req, res, next) => {
   // POST /user/

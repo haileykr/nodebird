@@ -4,3 +4,5 @@ prepare/front/.next
 prepare/back/node_modules
 prepare/back/config
 
+prepare/back/.env
+
