@@ -10,20 +10,34 @@ import CommentForm from './CommentForm';
 
 import PostCardContent from './PostCardContent';
 import FollowButton from './FollowButton';
-import { REMOVE_POST_REQUEST } from '../reducers/post';
+import { REMOVE_POST_REQUEST,LIKE_POST_REQUEST, UNLIKE_POST_REQUEST } from '../reducers/post';
 
 const PostCard = ({ post }) => {
     // post는 지금 반복문 통해서
     // 부모로부터 받아온 것
     const dispatch = useDispatch();
     const {removePostLoading} = useSelector((state) => state.post);
-    const [liked, setLiked] = useState(false);
+    // const [liked, setLiked] = useState(false);
     const [commentFormOpened, setCommentFormOpened] = useState(false);
-    const onToggleLike = useCallback(() => {
-        setLiked((prev) => !prev);
+    const onLike = useCallback(() => {
+        // setLiked((prev) => !prev);
 
         // prev는 이전 상태가 들어있음. useState -liked/setliked
+
+
+        dispatch({
+            type: LIKE_POST_REQUEST,
+            data: post.id
+        })
     }, []);
+
+    const onUnlike = useCallback(() =>{
+
+        dispatch({
+            type: UNLIKE_POST_REQUEST,
+            data:post.id
+        })
+    }, [])
     const onToggleComment = useCallback(() => {
         setCommentFormOpened((prev) => !prev);
     }, []);
@@ -39,6 +53,9 @@ const PostCard = ({ post }) => {
     // const id = me && me.id;
     // 위의 식은 아래와 같은 뜻
     const id = me?.id;
+
+    
+    const liked = post.Likers.find((v) => v.id===id);
     // "optional chaining 연산자!"
     return (
         <div style={{ marginBottom: 20 }}>
@@ -48,8 +65,8 @@ const PostCard = ({ post }) => {
                 actions={[
                     <RetweetOutlined key="retweet" />,
                     liked
-                        ? <HeartTwoTone twoToneColor='#eb2f96' key="heart" onClick={onToggleLike} />
-                        : <HeartOutlined key="heart" onClick={onToggleLike} />,
+                        ? <HeartTwoTone twoToneColor='#eb2f96' key="heart" onClick={onUnlike} />
+                        : <HeartOutlined key="heart" onClick={onLike}/>,
                     <MessageOutlined key="comment" onClick={onToggleComment} />,
                     <Popover key="more" content={(
                         <Button.Group>
@@ -113,9 +130,10 @@ PostCard.propTypes = {
         id: PropTypes.number,
         User: PropTypes.object,
         content: PropTypes.string,
-        createdAt: PropTypes.object,
+        createdAt: PropTypes.string ,
         Comments: PropTypes.arrayOf(PropTypes.object),
-        Images: PropTypes.arrayOf(PropTypes.object)
+        Images: PropTypes.arrayOf(PropTypes.object),
+        Likers: PropTypes.arrayOf(PropTypes.object)
     }).isRequired,
 
 }

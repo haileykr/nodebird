@@ -5,7 +5,10 @@ const dotenv = require('dotenv');
 const session = require('express-session');
 const cookieParser = require('cookie-parser');
 const postRouter = require('./routes/post');
+const postsRouter = require('./routes/posts');
 const userRouter = require('./routes/user');
+const morgan = require('morgan');
+const path = require("path");
 
 
 const db = require('./models');
@@ -18,15 +21,18 @@ db.sequelize.sync()
     .then(() => {
         console.log('db connection success');
     })
-    .catch(
-        console.error
-    );
+    .catch((err) => {
+        console.error(err)
+    });
 passportConfig();
     
+app.use(morgan('dev'));
+
 app.use(cors({
-    origin: '*', // fix it when in production
-    credentials: false
+    origin:'http://localhost:3000',
+    credentials: true
 }));
+app.use("/", express.static(path.join(__dirname,"uploads")));
 app.use(express.json()); // json format covered
 app.use(express.urlencoded({extended: true})); //form submit
 
@@ -47,17 +53,8 @@ app.get('/', (req, res) => {
 })
 
 
-app.get('/posts', (req, res) => {
-    res.json([
-        {id: 1, content: 'Hello'},
-        {id: 1, content: 'Hello'},
-        {id: 1, content: 'Hello'},
-    ])
-
-});
-
-
 app.use('/post', postRouter);
+app.use('/posts', postsRouter);
 app.use('/user', userRouter);
 
 

@@ -1,6 +1,9 @@
 import produce from "immer";
 
 export const initialState = {
+  loadMyInfoLoading: false, //fetching my info
+  loadMyInfoDone: false,
+  loadMyInfoError: null,
   followLoading: false, //trying logging in
   followDone: false,
   followError: null,
@@ -24,6 +27,10 @@ export const initialState = {
   signUpData: {},
   loginData: {},
 };
+
+export const LOAD_MY_INFO_REQUEST = "LOAD_MY_INFO_REQUEST";
+export const LOAD_MY_INFO_SUCCESS = "LOAD_MY_INFO_SUCCESS";
+export const LOAD_MY_INFO_FAILURE = "LOAD_MY_INFO_FAILURE";
 
 export const LOG_IN_REQUEST = "LOG_IN_REQUEST";
 export const LOG_IN_SUCCESS = "LOG_IN_SUCCESS";
@@ -60,14 +67,6 @@ export const LOAD_FOLLOWINGS_FAILURE = "LOAD_FOLLOWINGS_FAILURE";
 export const REMOVE_FOLLOWER_REQUEST = "REMOVE_FOLLOWER_REQUEST";
 export const REMOVE_FOLLOWER_SUCCESS = "REMOVE_FOLLOWER_SUCCESS";
 export const REMOVE_FOLLOWER_FAILURE = "REMOVE_FOLLOWER_FAILURE";
-
-export const LOAD_MY_INFO_REQUEST = "LOAD_MY_INFO_REQUEST";
-export const LOAD_MY_INFO_SUCCESS = "LOAD_MY_INFO_SUCCESS";
-export const LOAD_MY_INFO_FAILURE = "LOAD_MY_INFO_FAILURE";
-
-export const LOAD_USER_REQUEST = "LOAD_USER_REQUEST";
-export const LOAD_USER_SUCCESS = "LOAD_USER_SUCCESS";
-export const LOAD_USER_FAILURE = "LOAD_USER_FAILURE";
 
 export const ADD_POST_TO_ME = "ADD_POST_TO_ME";
 
@@ -173,20 +172,7 @@ const reducer = (state = initialState, action) => {
         draft.loadMyInfoLoading = false;
         draft.loadMyInfoError = action.error;
         break;
-      case LOAD_USER_REQUEST:
-        draft.loadUserLoading = true;
-        draft.loadUserError = null;
-        draft.loadUserDone = false;
-        break;
-      case LOAD_USER_SUCCESS:
-        draft.loadUserLoading = false;
-        draft.userInfo = action.data;
-        draft.loadUserDone = true;
-        break;
-      case LOAD_USER_FAILURE:
-        draft.loadUserLoading = false;
-        draft.loadUserError = action.error;
-        break;
+
       case FOLLOW_REQUEST:
         draft.followLoading = true;
         draft.followError = null;
@@ -194,7 +180,7 @@ const reducer = (state = initialState, action) => {
         break;
       case FOLLOW_SUCCESS:
         draft.followLoading = false;
-        draft.me.Followings.push({ id: action.data });
+        draft.me.Followings.push({ id: action.data.UserId });
         draft.followDone = true;
         break;
       case FOLLOW_FAILURE:
@@ -209,7 +195,7 @@ const reducer = (state = initialState, action) => {
       case UNFOLLOW_SUCCESS:
         draft.unfollowLoading = false;
         draft.me.Followings = draft.me.Followings.filter(
-          (v) => v.id !== action.data
+          (v) => v.id !== action.data.UserId
         );
         draft.unfollowDone = true;
         break;
