@@ -1,9 +1,8 @@
 import React, {useCallback, useState, useRef, useEffect} from 'react';
 import { Form, Input,Button } from 'antd';
 import { useSelector, useDispatch } from 'react-redux';
-import { addPost, UPLOAD_IMAGES_REQUEST } from '../reducers/post';
+import { addPost, UPLOAD_IMAGES_REQUEST, REMOVE_IMAGE, ADD_POST_REQUEST } from '../reducers/post';
 import useInput from '../hooks/useInput'
-
 
 const PostForm = () => {
     const {imagePaths,addPostDone}=useSelector((state) => state.post);
@@ -16,13 +15,28 @@ const PostForm = () => {
             setText('');
         }
     }, [addPostDone]);
-    
-    
-    const onSubmit = useCallback(() => {
-        dispatch(addPost(text));
+        
+    const onSubmit = useCallback(() => { 
+        if (!text || !text.trim()) {
+            return alert("Write a post");
+        }
+        const formData = new FormData();
+        imagePaths.forEach((p) => {
+            formData.append('image',p);//req.body.image
+        });
+
+        formData.append('content', text);//req.body.content
+        return dispatch({ 
+            type: ADD_POST_REQUEST,
+            data: formData
+        });
         // addPost is an object!
         // reminder - action is originally an object
         // if you want to dynamically create an action, make a function called 'action creator'
+    
+        // "imagePaths" are string anyways, so you can actually just do
+        // data: {imagePaths,  content:text}
+        // but we are using formData to use upload.none() multer MW
     }, [text]);
     
     const onClickImageUpload = useCallback(() => {
@@ -42,6 +56,14 @@ const PostForm = () => {
             data:imageFormData            
         })
     }, []);
+
+    const onRemoveImage = useCallback((index) =>() =>{
+        dispatch({
+            type:  REMOVE_IMAGE,
+            data: index
+        })
+    }
+    );
     
     
     return (
@@ -62,12 +84,12 @@ const PostForm = () => {
             </div>
             <div>
                 
-            {imagePaths.map((v) => (
+            {imagePaths.map((v, i) => (
                 // image preview!
                 <div key = {v} style = {{ display: 'inline-block'}}>
                     <img src = {`http://localhost:3065/${v}`} style = {{width: '200px'}} alt = {v}></img>
                 <div>
-                    <Button>Remove</Button>
+                    <Button onClick = {onRemoveImage(i)}>Remove</Button>
                 </div>
                 </div>
 

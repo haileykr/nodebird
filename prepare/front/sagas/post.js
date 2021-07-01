@@ -1,6 +1,13 @@
 import axios from "axios";
-import { all, call, fork, takeLatest, put, delay } from "redux-saga/effects";
-import shortId from "shortid";
+import {
+  all,
+  call,
+  fork,
+  takeLatest,
+  put,
+  delay,
+  take,
+} from "redux-saga/effects";
 import {
   LOAD_POST_SUCCESS,
   LOAD_POST_FAILURE,
@@ -24,34 +31,37 @@ import {
   UPLOAD_IMAGES_REQUEST,
   UPLOAD_IMAGES_SUCCESS,
   UPLOAD_IMAGES_FAILURE,
+  RETWEET_REQUEST,
+  RETWEET_SUCCESS,
+  RETWEET_FAILURE,
 } from "../reducers/post";
 import { ADD_POST_TO_ME, REMOVE_POST_OF_ME } from "../reducers/user";
 
-function loadPostAPI(data) { 
-  return axios.get("/posts", data);
+function loadPostAPI(data) {
+  return axios.get(`/posts?lastId=${data || 0}` ); //to send data through GET send it as a query string
 }
 
 function* loadPost(action) {
   try {
-    const result = yield call(loadPostAPI, action.data)
+    const result = yield call(loadPostAPI, action.lastId);
 
     yield put({
       type: LOAD_POST_SUCCESS,
       // data: generateDummyPost(5),
 
-
-      data: result.data
+      data: result.data,
     });
   } catch (err) {
     yield put({
       type: LOAD_POST_FAILURE,
-      data: err,
+      error: err,
     });
   }
 }
 
 function addPostAPI(data) {
-  return axios.post("/post", { content: data });
+  // return axios.post("/post", { content: data }); //when only string were sent as json
+  return axios.post("/post", data); //send as formData
 }
 
 function* addPost(action) {
@@ -60,7 +70,7 @@ function* addPost(action) {
     // const id = shortId.generate();
     yield put({
       type: ADD_POST_SUCCESS,
-      data:result.data
+      data: result.data,
     });
     yield put({
       type: ADD_POST_TO_ME,
@@ -69,18 +79,18 @@ function* addPost(action) {
   } catch (err) {
     yield put({
       type: ADD_POST_FAILURE,
-      data: err.response.data,
+      error: err.response.data,
     });
   }
 }
 
 function removePostAPI(data) {
-  return axios.delete(`/post/${data}`); 
+  return axios.delete(`/post/${data}`);
 }
 
 function* removePost(action) {
   try {
-    const result = yield call(removePostAPI, action.data)
+    const result = yield call(removePostAPI, action.data);
     // post reducer조작
     yield put({
       type: REMOVE_POST_SUCCESS,
@@ -94,7 +104,7 @@ function* removePost(action) {
   } catch (err) {
     yield put({
       type: REMOVE_POST_FAILURE,
-      data: err.response.data,
+      error: err.response.data,
     });
   }
 }
@@ -105,7 +115,7 @@ function addCommentAPI(data) {
 
 function* addComment(action) {
   try {
-    const result =  yield call(addCommentAPI, action.data);
+    const result = yield call(addCommentAPI, action.data);
     yield put({
       type: ADD_COMMENT_SUCCESS,
       data: result.data,
@@ -113,7 +123,7 @@ function* addComment(action) {
   } catch (err) {
     yield put({
       type: ADD_COMMENT_FAILURE,
-      data: err.response.data,
+      error: err.response.data,
     });
   }
 }
@@ -124,16 +134,15 @@ function likePostAPI(data) {
 
 function* likePost(action) {
   try {
-    const result =  yield call(likePostAPI, action.data);
+    const result = yield call(likePostAPI, action.data);
     yield put({
       type: LIKE_POST_SUCCESS,
-      data: result.data
-      
+      data: result.data,
     });
   } catch (err) {
     yield put({
       type: LIKE_POST_FAILURE,
-      data: err.response.data,
+      error: err.response.data,
     });
   }
 }
@@ -144,38 +153,56 @@ function unlikePostAPI(data) {
 
 function* unlikePost(action) {
   try {
-    const result =  yield call(unlikePostAPI, action.data);
+    const result = yield call(unlikePostAPI, action.data);
     yield put({
       type: UNLIKE_POST_SUCCESS,
-      data: result.data
+      data: result.data,
     });
   } catch (err) {
     yield put({
       type: UNLIKE_POST_FAILURE,
-      data: err.response.data,
+      error: err.response.data,
     });
   }
 }
 
 function uploadImagesAPI(data) {
-  return axios.post(`/post/images` , data);//FormData should be sent as it is
+  return axios.post(`/post/images`, data); //FormData should be sent as it is
 }
 
 function* uploadImages(action) {
   try {
-    const result =  yield call(uploadImagesAPI, action.data);
+    const result = yield call(uploadImagesAPI, action.data);
     yield put({
       type: UPLOAD_IMAGES_SUCCESS,
-      data: result.data
+      data: result.data,
     });
   } catch (err) {
     yield put({
       type: UPLOAD_IMAGES_FAILURE,
-      data: err.response.data,
+      error: err.response.data,
     });
   }
 }
 
+function retweetAPI(data) {
+  return axios.post(`/post/${data}/retweet`);
+}
+
+function* retweet(action) {
+  try {
+    const result = yield call(retweetAPI, action.data);
+    yield put({
+      type: RETWEET_SUCCESS,
+      data: result.data,
+    });
+  } catch (err) {
+    yield put({
+      type: RETWEET_FAILURE,
+      error: err.response.data,
+    });
+  }
+}
 
 function* watchLoadPost() {
   yield takeLatest(LOAD_POST_REQUEST, loadPost);
@@ -205,7 +232,9 @@ function* watchUploadImages() {
   yield takeLatest(UPLOAD_IMAGES_REQUEST, uploadImages);
 }
 
-
+function* watchRetweet() {
+  yield takeLatest(RETWEET_REQUEST, retweet);
+}
 
 export default function* postSaga() {
   yield all([
@@ -215,6 +244,7 @@ export default function* postSaga() {
     fork(watchAddComment),
     fork(watchLikePost),
     fork(watchUnlikePost),
-    fork(watchUploadImages)
+    fork(watchUploadImages),
+    fork(watchRetweet),
   ]);
 }

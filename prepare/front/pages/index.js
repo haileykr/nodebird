@@ -13,15 +13,21 @@ import { LOAD_MY_INFO_REQUEST } from "../reducers/user";
 const Home = () => {
   const dispatch = useDispatch();
   const { me } = useSelector((state) => state.user);
-  const { mainPosts, hasMorePost, loadPostLoading } = useSelector(
+  const { mainPosts, hasMorePost, loadPostLoading, retweetError } = useSelector(
     (state) => state.post
   );
+
+  useEffect(() => {
+    if (retweetError) {
+      alert(retweetError);
+    }
+  }, [retweetError]);
+
   useEffect(() => {
     dispatch({
       type: LOAD_MY_INFO_REQUEST,
     });
     dispatch({
-      
       type: LOAD_POST_REQUEST,
     });
   }, []);
@@ -34,18 +40,20 @@ const Home = () => {
       // scrollHeight: 총 길이
       // 따라서 끝까지 내렸을 때
       // scrollY + clientHeight=scrollHeight!!
-    //   console.log(
-    //     window.scrollY,
-    //     document.documentElement.clientHeight,
-    //     document.documentElement.scrollHeight
-    //   );
+      //   console.log(
+      //     window.scrollY,
+      //     document.documentElement.clientHeight,
+      //     document.documentElement.scrollHeight
+      //   );
       if (
         window.scrollY + document.documentElement.clientHeight >
         document.documentElement.scrollHeight - 300
       ) {
         if (hasMorePost && !loadPostLoading) {
+          const lastId = mainPosts[mainPosts.length - 1]?.id;
           dispatch({
             type: LOAD_POST_REQUEST,
+            lastId,
           });
         }
       }

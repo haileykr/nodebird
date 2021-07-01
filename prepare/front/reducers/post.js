@@ -31,14 +31,19 @@ export const initialState = {
   unlikePostLoading: false,
   unlikePostDone: false,
   unlikePostError: null,
-  
+
   uploadImagesLoading: false,
   uploadImagesDone: false,
   uploadImagesError: null,
-  
 
+  removeImagesLoading: false,
+  removeImagesDone: false,
+  removeImagesError: null,
+
+  retweetLoading: false,
+  retweetDone: false,
+  retweetError: null
 };
-
 
 // export const generateDummyPost = (number) =>
 //   Array(number)
@@ -89,13 +94,19 @@ export const LIKE_POST_REQUEST = "LIKE_POST_REQUEST";
 export const LIKE_POST_SUCCESS = "LIKE_POST_SUCCESS";
 export const LIKE_POST_FAILURE = "LIKE_POST_FAILURE";
 
-export const  UNLIKE_POST_REQUEST =  "UNLIKE_POST_REQUEST";
-export const  UNLIKE_POST_SUCCESS =  "UNLIKE_POST_SUCCESS";
-export const  UNLIKE_POST_FAILURE =  "UNLIKE_POST_FAILURE";
+export const UNLIKE_POST_REQUEST = "UNLIKE_POST_REQUEST";
+export const UNLIKE_POST_SUCCESS = "UNLIKE_POST_SUCCESS";
+export const UNLIKE_POST_FAILURE = "UNLIKE_POST_FAILURE";
 
 export const UPLOAD_IMAGES_REQUEST = "UPLOAD_IMAGEST_REQUEST";
 export const UPLOAD_IMAGES_SUCCESS = "UPLOAD_IMAGEST_SUCCESS";
 export const UPLOAD_IMAGES_FAILURE = "UPLOAD_IMAGEST_FAILURE";
+
+export const RETWEET_REQUEST = "RETWEET_REQUEST";
+export const RETWEET_SUCCESS = "RETWEET_SUCCESS";
+export const RETWEET_FAILURE = "RETWEET_FAILURE";
+
+export const REMOVE_IMAGE = "REMOVE_IMAGE"; //synchronous action
 
 export const loadPost = (data) => ({
   type: LOAD_POST_REQUEST,
@@ -143,9 +154,9 @@ const reducer = (state = initialState, action) => {
       case LOAD_POST_SUCCESS:
         //제일 위에 보여주기 위해 앞에다 추가
         draft.loadPostLoading = false;
-        draft.hasMorePost = draft.mainPosts.length < 50;
+        draft.hasMorePost=action.data.length===10;
         draft.loadPostDone = true;
-        draft.mainPosts = action.data.concat(draft.mainPosts);
+        draft.mainPosts =draft.mainPosts.concat(action.data);
         break;
       case LOAD_POST_FAILURE:
         draft.loadPostLoading = false;
@@ -161,6 +172,7 @@ const reducer = (state = initialState, action) => {
         //제일 위에 보여주기 위해 앞에다 추가
         draft.addPostLoading = false;
         draft.addPostDone = true;
+        draft.imagePaths = [];
         break;
       case ADD_POST_FAILURE:
         draft.addPostLoading = false;
@@ -175,7 +187,9 @@ const reducer = (state = initialState, action) => {
         //지울때는 filter가 더 "편하기 때문"에 이렇게 자주 사용
         //엄밀히 말하면 splice가 의미론적으로 더 맞긴 한데
         //그러려면 index를 찾아야 해서 한 줄이 늘어남
-        draft.mainPosts = draft.mainPosts.filter((v) => v.id !== action.data.PostId);
+        draft.mainPosts = draft.mainPosts.filter(
+          (v) => v.id !== action.data.PostId
+        );
         draft.removePostLoading = false;
         draft.removePostDone = true;
         break;
@@ -209,9 +223,9 @@ const reducer = (state = initialState, action) => {
         draft.likePostDone = false;
         draft.likePostError = null;
         break;
-      case LIKE_POST_SUCCESS:{
+      case LIKE_POST_SUCCESS: {
         const post = draft.mainPosts.find((v) => v.id === action.data.PostId);
-        post.Likers.push({id: action.data.UserId});
+        post.Likers.push({ id: action.data.UserId });
         draft.likePostLoading = false;
         draft.likePostDone = true;
         break;
@@ -225,17 +239,16 @@ const reducer = (state = initialState, action) => {
         draft.unlikePostDone = false;
         draft.unlikePostError = null;
         break;
-      case UNLIKE_POST_SUCCESS:
-        {
-        const post = draft.mainPosts.find(v => v.id === action.data.PostId);
-        post.Likers = post.Likers.filter( v => v.id !== action.data.UserId);
+      case UNLIKE_POST_SUCCESS: {
+        const post = draft.mainPosts.find((v) => v.id === action.data.PostId);
+        post.Likers = post.Likers.filter((v) => v.id !== action.data.UserId);
         draft.unlikePostLoading = false;
         draft.unlikePostDone = true;
         break;
-        }
+      }
       case UNLIKE_POST_FAILURE:
         draft.unlikePostLoading = false;
-        draft.unlikePostError = data.error;
+        draft.unlikePostError = action.error;
         break;
       case UPLOAD_IMAGES_REQUEST:
         draft.uploadImagesLoading = true;
@@ -245,11 +258,28 @@ const reducer = (state = initialState, action) => {
       case UPLOAD_IMAGES_SUCCESS:
         draft.imagePaths = action.data; //getting filenmaes from res.json
         draft.uploadImagesLoading = false;
-        draft.uploadImagesDone =true;
+        draft.uploadImagesDone = true;
         break;
       case UPLOAD_IMAGES_FAILURE:
         draft.uploadImagesLoading = false;
-        draft.uploadImagesError = data.error;
+        draft.uploadImagesError = action.error;
+        break;
+      case RETWEET_REQUEST:
+        draft.retweetLoading = true;
+        draft.retweetDone = false;
+        draft.retweetError = null;
+        break;
+      case RETWEET_SUCCESS:
+        draft.mainPosts.unshift(action.data);
+        draft.retweetLoading = false;
+        draft.retweetDone = true;
+        break;
+      case RETWEET_FAILURE:
+        draft.retweetLoading = false;
+        draft.retweetError = action.error;
+        break;
+      case REMOVE_IMAGE:
+        draft.imagePaths = draft.imagePaths.filter((v, i) => i !== action.data);
         break;
       default:
         break;
