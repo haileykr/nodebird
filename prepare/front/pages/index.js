@@ -1,14 +1,15 @@
-import React, { useEffect } from "react";
-//Next에서는 이게 필요 없음
+import React, { useEffect } from "react";//Next.js does not require it actually
 import { useSelector, useDispatch } from "react-redux";
+import {END} from "redux-saga";
 
 import Applayout from "../components/Applayout";
 import PostForm from "../components/PostForm";
-
 import PostCard from "../components/PostCard";
 
 import { LOAD_POST_REQUEST } from "../reducers/post";
 import { LOAD_MY_INFO_REQUEST } from "../reducers/user";
+
+import wrapper from "../store/configureStore";
 
 const Home = () => {
   const dispatch = useDispatch();
@@ -23,14 +24,15 @@ const Home = () => {
     }
   }, [retweetError]);
 
-  useEffect(() => {
-    dispatch({
-      type: LOAD_MY_INFO_REQUEST,
-    });
-    dispatch({
-      type: LOAD_POST_REQUEST,
-    });
-  }, []);
+  // Moved to SSR part (see below)
+  // useEffect(() => {
+  //   dispatch({
+  //     type: LOAD_MY_INFO_REQUEST,
+  //   });
+  //   dispatch({
+  //     type: LOAD_POST_REQUEST,
+  //   });
+  // }, []);
 
   useEffect(() => {
     function onScroll() {
@@ -77,5 +79,18 @@ const Home = () => {
     </Applayout>
   );
 };
+export const getServerSideProps = wrapper.getServerSideProps(async (context)=>{
+  console.log(context);  
+  
+  context.store.dispatch({
+      type: LOAD_MY_INFO_REQUEST,
+    });
+    context.store.dispatch({
+      type: LOAD_POST_REQUEST,
+    });
+
+    context.store.dispatch(END);
+    await context.store.sagaTask.toPromise();//sagaTask from configStore
+})//SSR,ran before the line below
 
 export default Home;

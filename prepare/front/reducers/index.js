@@ -28,21 +28,24 @@ import post from './post';
 // }
 // store.dispatch(changeNickname('MT'));
 
-// (이전상태, 액션) => 다음상태
-const rootReducer = combineReducers({
-    index: (state = {}, action) => {
+// (prevState, action) => nextState
+// with ssr
+const rootReducer = (state, action)=>{
 //const rootReducer = (state = initialState, action) => {
         switch (action.type) {
             case HYDRATE: 
                 console.log('HYDRATE', action);
-                return {...state, ...action.payload};
-            
-            default:
-                return state;
+                return action.payload;
+            default:{
+                const combinedReducer = combineReducers({
+                    user,
+                    post
+                });
+                
+                return combinedReducer(state, action);
+            }
         }
-    },
-    user,
-    post,
-});
+
+};
 
 export default rootReducer;
