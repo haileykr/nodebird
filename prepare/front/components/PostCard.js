@@ -146,7 +146,7 @@ const PostCard = ({ post }) => {
               )
             }
           >
-            <div styel = {{float: 'right'}} >
+            <div styel={{ float: "right" }}>
               {moment(post.createdAt).format("MM / DD / YYYY")}
               {/* new Date().getFullYear + new Date().getMonth +new Date().getDate */}
             </div>
@@ -164,21 +164,20 @@ const PostCard = ({ post }) => {
           </Card>
         ) : (
           <>
-          <div style = {{float: 'right'}}>
-                        {moment(post.createdAt).format("MM / DD / YYYY")}
-                        </div>
-          <Card.Meta
-            avatar={
-              <Link href={`/user/${post.User.id}`}>
-                <a>
-                  <Avatar>{post.User.nickname[0]}</Avatar>{" "}
-                </a>
-              </Link>
-            }
-            title={post.User.nickname}
-            description={<PostCardContent postData={post.content} />}
-          />
-
+            <div style={{ float: "right" }}>
+              {moment(post.createdAt).format("MM / DD / YYYY")}
+            </div>
+            <Card.Meta
+              avatar={
+                <Link href={`/user/${post.User.id}`}>
+                  <a>
+                    <Avatar>{post.User.nickname[0]}</Avatar>{" "}
+                  </a>
+                </Link>
+              }
+              title={post.User.nickname}
+              description={<PostCardContent postData={post.content} />}
+            />
           </>
         )}
       </Card>
