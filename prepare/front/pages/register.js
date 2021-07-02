@@ -10,7 +10,7 @@ import wrapper from "../store/configureStore";
 import Applayout from "../components/Applayout";
 import { useDispatch, useSelector } from "react-redux";
 import useInput from "../hooks/useInput";
-import { SIGN_UP_REQUEST } from "../reducers/user";
+import { SIGN_UP_REQUEST, LOAD_MY_INFO_REQUEST } from "../reducers/user";
 
 const ErrorMessage = styled.div`
   color: red;
