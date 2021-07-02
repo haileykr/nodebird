@@ -48,49 +48,6 @@ router.get("/", async (req, res, next) => {
   }
 });
 
-router.get("/:userId",async (req, res, next) => {
-  // GET /user/1
-  try {
-    const fullUserWithoutPassword = await User.findOne({
-      where: { id: req.params.userId },
-      attributes:
-        // ['id', 'nickname', 'email'],
-        {
-          exclude: ["password"],
-        },
-      include: [
-        {
-          model: Post,
-          attributes: ["id"], //to get only the data needed to show numbers
-        },
-        {
-          model: User,
-          as: "Followings",
-          attributes: ["id"],
-        },
-        {
-          model: User,
-          as: "Followers",
-
-          attributes: ["id"],
-        },
-      ],
-    });
-    if (fullUserWithoutPassword){ 
-      const data = fullUserWithoutPassword.toJSON();
-      data.Posts = data.Posts.length;//to protect privateInfo
-      data.Followings = data.Followings.length;
-      data.Followers = data.Followers.length;
-      res.status(200).json(data); //user info
-    } else {
-      res.status(404).json('No user found.');
-    }
-  } catch (error) {
-    console.error(error);
-    next(error);
-  }
-});
-
 router.post("/login", isNotLoggedIn, (req, res, next) => {
   //middleware expansion format!
   passport.authenticate("local", (error, user, info) => {
@@ -163,45 +120,15 @@ router.patch("/nickname", isLoggedIn, async (req, res, next) => {
   }
 });
 
-router.patch("/:userId/follow", isLoggedIn, async (req, res, next) => {
-  // PATCH /user/1/follow
-  try {
-    const user = await User.findOne({ where: { id: req.params.userId }}); //confirm that the user exists!
-    if (!user) {
-      res.status(403).send("The user does not exist.");
-    }
-    await user.addFollowers(req.user.id);
-    res.status(200).json({ UserId: parseInt(req.params.userId) });
-  } catch (error) {
-    console.error(error);
-    next(error);
-  }
-});
-
-router.delete("/:userId/follow", isLoggedIn, async (req, res, next) => {
-  try {
-    const user = await User.findOne({ where: { id: req.params.userId } }); //confirm that the user exists!
-    if (!user) {
-      res.status(403).send("The user does not exist.");
-    }
-
-    await user.removeFollowers(req.user.id);
-    
-    res.status(200).json({ UserId: parseInt(req.params.userId) });
-  } catch (error) {
-    console.error(error);
-    next(error);
-  }
-});
-
 router.get("/followers", isLoggedIn, async (req, res, next) => { //GET /user/followers
   try {
     const user = await User.findOne({ where: { id: req.user.id } });
     if (!user) {
       res.status(403).send("The user does not exist.");
     }
-
-    const followers = await user.getFollowers();
+    const followers = await user.getFollowers({
+      limit: parseInt(req.query.limit)
+    });
     
     res.status(200).json(followers);
   } catch (error) {
@@ -217,7 +144,9 @@ router.get("/followings", isLoggedIn, async (req, res, next) => { //GET /user/fo
       res.status(403).send("The user does not exist.");
     }
 
-    const followings = await user.getFollowings();
+    const followings = await user.getFollowings({
+      limit:parseInt(req.query.limit)
+    });
 
     res.status(200).json(followings);
   } catch (error) {
@@ -266,6 +195,49 @@ router.post("/", isNotLoggedIn, async (req, res, next) => {
     next(error); //status 500 (error from server.)
   }
 });
+router.get("/:userId",async (req, res, next) => {
+  // GET /user/1
+  try {
+    const fullUserWithoutPassword = await User.findOne({
+      where: { id: req.params.userId },
+      attributes:
+        // ['id', 'nickname', 'email'],
+        {
+          exclude: ["password"],
+        },
+      include: [
+        {
+          model: Post,
+          attributes: ["id"], //to get only the data needed to show numbers
+        },
+        {
+          model: User,
+          as: "Followings",
+          attributes: ["id"],
+        },
+        {
+          model: User,
+          as: "Followers",
+
+          attributes: ["id"],
+        },
+      ],
+    });
+    if (fullUserWithoutPassword){ 
+      const data = fullUserWithoutPassword.toJSON();
+      data.Posts = data.Posts.length;//to protect privateInfo
+      data.Followings = data.Followings.length;
+      data.Followers = data.Followers.length;
+      res.status(200).json(data); //user info
+    } else {
+      res.status(404).json('No user found.');
+    }
+  } catch (error) {
+    console.error(error);
+    next(error);
+  }
+});
+
 
 
 router.get("/:userId/posts", async (req, res, next) => {
@@ -312,6 +284,37 @@ router.get("/:userId/posts", async (req, res, next) => {
       ],
     });
     res.status(200).json(posts);
+  } catch (error) {
+    console.error(error);
+    next(error);
+  }
+});
+
+router.patch("/:userId/follow", isLoggedIn, async (req, res, next) => {
+  // PATCH /user/1/follow
+  try {
+    const user = await User.findOne({ where: { id: req.params.userId }}); //confirm that the user exists!
+    if (!user) {
+      res.status(403).send("The user does not exist.");
+    }
+    await user.addFollowers(req.user.id);
+    res.status(200).json({ UserId: parseInt(req.params.userId) });
+  } catch (error) {
+    console.error(error);
+    next(error);
+  }
+});
+
+router.delete("/:userId/follow", isLoggedIn, async (req, res, next) => {
+  try {
+    const user = await User.findOne({ where: { id: req.params.userId } }); //confirm that the user exists!
+    if (!user) {
+      res.status(403).send("The user does not exist.");
+    }
+
+    await user.removeFollowers(req.user.id);
+    
+    res.status(200).json({ UserId: parseInt(req.params.userId) });
   } catch (error) {
     console.error(error);
     next(error);

@@ -1,5 +1,7 @@
-import React, { useState, useCallback, useEffect } from "react";
+import React, { useState, useCallback } from "react";
 import PropTypes from "prop-types";
+import Link from "next/link";
+import moment from "moment";
 
 import { useSelector, useDispatch } from "react-redux";
 import { Button, Card, Popover, Avatar, List, Comment } from "antd";
@@ -23,9 +25,11 @@ import {
   RETWEET_REQUEST,
 } from "../reducers/post";
 
+// moment.locale("ko");
+
 const PostCard = ({ post }) => {
-  // post는 지금 반복문 통해서
-  // 부모로부터 받아온 것
+  // post is what we got from parents
+  // through loops
   const dispatch = useDispatch();
   const { removePostLoading } = useSelector((state) => state.post);
   // const [liked, setLiked] = useState(false);
@@ -33,16 +37,16 @@ const PostCard = ({ post }) => {
 
   const { me } = useSelector((state) => state.user);
   // const id = me && me.id;
-  // 위의 식은 아래와 같은 뜻
+  // equivalent to
   const id = me?.id;
 
   const liked = post.Likers.find((v) => v.id === id);
-  // "optional chaining 연산자!"
+  // "optional chaining  OPERATOR!"
 
   const onLike = useCallback(() => {
     // setLiked((prev) => !prev);
 
-    // prev는 이전 상태가 들어있음. useState -liked/setliked
+    // prev has the previous state. useState -liked/setliked
 
     if (!id) {
       return alert("Login required");
@@ -142,18 +146,40 @@ const PostCard = ({ post }) => {
               )
             }
           >
+            <div styel = {{float: 'right'}} >
+              {moment(post.createdAt).format("MM / DD / YYYY")}
+              {/* new Date().getFullYear + new Date().getMonth +new Date().getDate */}
+            </div>
             <Card.Meta
-              avatar={<Avatar>{post.Retweet.User.nickname[0]}</Avatar>}
+              avatar={
+                <Link href={`/user/${post.Retweet.User.id}`}>
+                  <a>
+                    <Avatar>{post.Retweet.User.nickname[0]}</Avatar>{" "}
+                  </a>
+                </Link>
+              }
               title={post.Retweet.User.nickname}
               description={<PostCardContent postData={post.Retweet.content} />}
             />
           </Card>
         ) : (
+          <>
+          <div style = {{float: 'right'}}>
+                        {moment(post.createdAt).format("MM / DD / YYYY")}
+                        </div>
           <Card.Meta
-            avatar={<Avatar>{post.User.nickname[0]}</Avatar>}
+            avatar={
+              <Link href={`/user/${post.User.id}`}>
+                <a>
+                  <Avatar>{post.User.nickname[0]}</Avatar>{" "}
+                </a>
+              </Link>
+            }
             title={post.User.nickname}
             description={<PostCardContent postData={post.content} />}
           />
+
+          </>
         )}
       </Card>
       {commentFormOpened && (
@@ -162,9 +188,7 @@ const PostCard = ({ post }) => {
           {/* 게시글의 id를 comment가 받아야하기 때문에 post 넘겨줌! */}
           <List
             header={`
-                                ${
-                                  post.Comments ? post.Comments.length : "0"
-                                } comments`}
+              ${post.Comments ? post.Comments.length : "0"} comments`}
             itemLayout="horizontal"
             dataSource={post.Comments}
             // post.Comments 각각이 item으로 들어감
@@ -172,7 +196,13 @@ const PostCard = ({ post }) => {
               <li>
                 <Comment
                   author={item.User.nickname}
-                  avatar={<Avatar>{item.User.nickname[0]}</Avatar>}
+                  avatar={
+                    <Link href={`/user/${item.User.id}`}>
+                      <a>
+                        <Avatar>{item.User.nickname[0]}</Avatar>{" "}
+                      </a>
+                    </Link>
+                  }
                   content={item.content}
                 />
               </li>

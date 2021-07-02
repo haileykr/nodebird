@@ -18,7 +18,7 @@ export default class MyDocument extends Document {
                 styles : (
                     <>
                     {initialProps.styles}
-                    {sheet.getStylesElement()}
+                    {sheet.getStyleElement()}
                     </>
                 ),
             };//_document.js basic form
@@ -31,6 +31,7 @@ export default class MyDocument extends Document {
     
     
     render() {
+        return ( 
         <Html>
             <Head />
             <body>
@@ -41,5 +42,6 @@ export default class MyDocument extends Document {
             </body>
 
         </Html>
+        )
     }
 }

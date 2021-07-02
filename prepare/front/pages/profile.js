@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import Head from 'next/head';
 import Router from 'next/router';
 import {useSelector, useDispatch} from 'react-redux';
@@ -10,7 +10,7 @@ import wrapper from '../store/configureStore';
 import Applayout from '../components/Applayout';
 import NicknameEditForm from '../components/NicknameEditForm';
 import FollowList from   '../components/FollowList';
-import { LOAD_FOLLOWERS_REQUEST, LOAD_FOLLOWINGS_REQUEST } from '../reducers/user';
+import { LOAD_MY_INFO_REQUEST } from '../reducers/user';
 
 const fetcher = (url) => axios.get(url,{withCredentials:true})
     .then(result =>result.data); //configuration for SWR
@@ -20,16 +20,30 @@ const Profile = () => {
     // const followerList = [{nickname: 'BP'}, {nickname: 'chicken'}, {nickname: 'bread'}]
     // const followingList = [{nickname: 'BP'}, {nickname: 'chicken'}, {nickname: 'bread'}]
     const dispatch = useDispatch();
+    const [followersLimit, setFollowerLimit] = useState(3);
+    const [followingsLimit, setFollowingsLimit] = useState(3);
 
-    const {data: followersData, error: followersError} = useSWR('http://localhost:3065/user/followers',fetcher);
+    const {data: followersData, error: followersError} = useSWR(`http://localhost:3065/user/followers?limit=${followersLimit}`,fetcher);
     //if both followersData and followersError are null it is still  loading
-    const {data: followingsData, error: followingsError} = useSWR('http://localhost:3065/user/followings',fetcher);
+    const {data: followingsData, error: followingsError} = useSWR(`http://localhost:3065/user/followings?limit=${followingsLimit}`,fetcher);
     
     useEffect(() => {
         if (!(me && me.id)){
             Router.push('/')
         }
     }, [me &&me.id])
+
+    const loadMoreFollowings = useCallback(()=>{
+        setFollowingsLimit((prev) => prev+3);
+    }, []);
+
+    const loadMoreFollowers = useCallback(() => {
+        setFollowersLimit((prev) => prev + 3);
+    },[]);
+
+    if (!me){ 
+        return null;
+    }
 
     if (followersError || followingsError){ 
         console.error(followersError || followingsError);
@@ -39,19 +53,7 @@ const Profile = () => {
         //the same number of hooks must be ran every time
     }
 
-    if (!me){ 
-        return null;
-    }
 
-    useEffect(() => {
-        dispatch({
-            type:LOAD_FOLLOWERS_REQUEST
-        })
-        dispatch({
-            type:LOAD_FOLLOWINGS_REQUEST
-        })
-    }, []);
-    
     return (
         <>
             <Head>
@@ -63,8 +65,8 @@ const Profile = () => {
                 {/* <FollowList header="Following"data={me.Followings}/> */}
                 {/* <FollowList header="Follower" data={me.Followers}/> */}
                 {/* SWR */}
-                <FollowList header="Following"data={followingsData}/>
-                <FollowList header="Follower" data={followersData}/>
+                <FollowList header="Following"data={followingsData} onClickMore = {loadMoreFollowings} loading={!followingsData &&  !followingsError}/>
+                <FollowList header="Follower" data={followersData} onClickMore = {loadMoreFollowers} loading = {!followersData && !followersError }/>
                 
             </Applayout>
         </>
