@@ -95,6 +95,8 @@ export const getServerSideProps = wrapper.getServerSideProps(
     });
     context.store.dispatch(END);
     await context.store.sagaTask.toPromise(); //sagaTask from configStore
+
+    // return { props: {data: 123} } // goes as props to Home
   }
 ); //SSR,ran before the line below
 
