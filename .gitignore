@@ -1,8 +1,6 @@
-prepare/front/node_modules
-prepare/front/.next 
+node_modules
+.env
+.next 
 
-prepare/back/node_modules
-prepare/back/config
-
-prepare/back/.env
-
+react_nodebird.pem
+config
