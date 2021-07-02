@@ -3,6 +3,9 @@ import Head from "next/head";
 import Router from 'next/router';
 import { Form, Input, Checkbox, Button } from "antd";
 import styled from "styled-components";
+import axios from "axios";
+import { END } from "@redux-saga/core";
+import wrapper from "../store/configureStore";
 
 import Applayout from "../components/Applayout";
 import { useDispatch, useSelector } from "react-redux";
@@ -145,5 +148,20 @@ const Register = () => {
     </>
   );
 };
+
+export const getServerSideProps = wrapper.getServerSideProps(
+  async (context) => {
+    const cookie = context.req ? context.req.headers.cookie : "";
+    axios.defaults.headers.Cookie = "";
+    if (context.req && cookie) {
+      axios.defaults.headers.Cookie = cookie;
+    }
+    context.store.dispatch({
+      type: LOAD_MY_INFO_REQUEST,
+    });
+    context.store.dispatch(END);
+    await context.store.sagaTask.toPromise(); //sagaTask from configStore
+  }
+); //SSR,ran before the line below
 
 export default Register;

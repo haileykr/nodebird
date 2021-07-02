@@ -4,14 +4,19 @@ import produce from "immer";
 
 export const initialState = {
   mainPosts: [],
+  singlePost: null,
 
   imagePaths: [],
   hasMorePost: true,
 
+  loadPostsLoading: false,
+  loadPostsDone: false,
+  loadPostsError: null,
+
   loadPostLoading: false,
   loadPostDone: false,
   loadPostError: null,
-
+  
   addPostLoading: false,
   addPostDone: false,
   addPostError: null,
@@ -74,9 +79,21 @@ export const initialState = {
 //initialState.mainPosts = initialState.mainPosts.concat(generateDummyPost(10));
 
 // 액션 이름을 상수로 지어주면 오타로 인한 에러 줄이는 데 도움됨
+export const LOAD_POSTS_REQUEST = "LOAD_POSTS_REQUEST";
+export const LOAD_POSTS_SUCCESS = "LOAD_POSTS_SUCCESS";
+export const LOAD_POSTS_FAILURE = "LOAD_POSTS_FAILURE";
+
 export const LOAD_POST_REQUEST = "LOAD_POST_REQUEST";
 export const LOAD_POST_SUCCESS = "LOAD_POST_SUCCESS";
 export const LOAD_POST_FAILURE = "LOAD_POST_FAILURE";
+
+export const LOAD_USER_POSTS_REQUEST = "LOAD_USER_POSTS_REQUEST";
+export const LOAD_USER_POSTS_SUCCESS = "LOAD_USER_POSTS_SUCCESS";
+export const LOAD_USER_POSTS_FAILURE = "LOAD_USER_POSTS_FAILURE";
+
+export const LOAD_HASHTAG_POSTS_REQUEST = "LOAD_HASHTAG_POSTS_REQUEST";
+export const LOAD_HASHTAG_POSTS_SUCCESS = "LOAD_HASHTAG_POSTS_SUCCESS";
+export const LOAD_HASHTAG_POSTS_FAILURE = "LOAD_HASHTAG_POSTS_FAILURE";
 
 export const ADD_POST_REQUEST = "ADD_POST_REQUEST";
 export const ADD_POST_SUCCESS = "ADD_POST_SUCCESS";
@@ -108,8 +125,8 @@ export const RETWEET_FAILURE = "RETWEET_FAILURE";
 
 export const REMOVE_IMAGE = "REMOVE_IMAGE"; //synchronous action
 
-export const loadPost = (data) => ({
-  type: LOAD_POST_REQUEST,
+export const loadPosts = (data) => ({
+  type: LOAD_POSTS_REQUEST,
   data,
 });
 
@@ -146,17 +163,38 @@ export const addComment = (data) => ({
 const reducer = (state = initialState, action) => {
   return produce(state, (draft) => {
     switch (action.type) {
+      case LOAD_USER_POSTS_REQUEST:
+      case LOAD_HASHTAG_POSTS_REQUEST:
+      case LOAD_POSTS_REQUEST:
+        draft.loadPostsLoading = true;
+        draft.loadPostsDone = false;
+        draft.loadPostsError = null;
+        break;
+      case LOAD_USER_POSTS_SUCCESS:
+      case LOAD_HASHTAG_POSTS_SUCCESS:
+      case LOAD_POSTS_SUCCESS:
+        //제일 위에 보여주기 위해 앞에다 추가
+        draft.loadPostsLoading = false;
+        draft.hasMorePost=action.data.length===10;
+        draft.loadPostsDone = true;
+        draft.mainPosts =draft.mainPosts.concat(action.data); 
+        break;
+      case LOAD_USER_POSTS_FAILURE:
+      case LOAD_HASHTAG_POSTS_FAILURE:
+      case LOAD_POSTS_FAILURE:
+        draft.loadPostsLoading = false;
+        draft.loadPostsError = action.error;
+        break;
       case LOAD_POST_REQUEST:
+        draft.singlePost = null;
         draft.loadPostLoading = true;
         draft.loadPostDone = false;
         draft.loadPostError = null;
         break;
       case LOAD_POST_SUCCESS:
-        //제일 위에 보여주기 위해 앞에다 추가
+        draft.singlePost = action.data;
         draft.loadPostLoading = false;
-        draft.hasMorePost=action.data.length===10;
         draft.loadPostDone = true;
-        draft.mainPosts =draft.mainPosts.concat(action.data); 
         break;
       case LOAD_POST_FAILURE:
         draft.loadPostLoading = false;

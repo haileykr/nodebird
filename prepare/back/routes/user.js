@@ -2,7 +2,9 @@ const express = require("express");
 const bcrypt = require("bcrypt");
 const passport = require("passport");
 
-const { User, Post } = require("../models"); // index.js에서 db에 User가 담겨 exports되어 접근 가능해 짐!
+const { Op } = require("sequelize");
+
+const { User, Comment, Post, Image } = require("../models"); // index.js에서 db에 User가 담겨 exports되어 접근 가능해 짐!
 const { isLoggedIn, isNotLoggedIn } = require("./middlewares");
 
 const router = express.Router();
@@ -39,6 +41,49 @@ router.get("/", async (req, res, next) => {
       res.status(200).json(fullUserWithoutPassword); //user info
     } else {
       res.status(200).json(null); //if logged out
+    }
+  } catch (error) {
+    console.error(error);
+    next(error);
+  }
+});
+
+router.get("/:userId",async (req, res, next) => {
+  // GET /user/1
+  try {
+    const fullUserWithoutPassword = await User.findOne({
+      where: { id: req.params.userId },
+      attributes:
+        // ['id', 'nickname', 'email'],
+        {
+          exclude: ["password"],
+        },
+      include: [
+        {
+          model: Post,
+          attributes: ["id"], //to get only the data needed to show numbers
+        },
+        {
+          model: User,
+          as: "Followings",
+          attributes: ["id"],
+        },
+        {
+          model: User,
+          as: "Followers",
+
+          attributes: ["id"],
+        },
+      ],
+    });
+    if (fullUserWithoutPassword){ 
+      const data = fullUserWithoutPassword.toJSON();
+      data.Posts = data.Posts.length;//to protect privateInfo
+      data.Followings = data.Followings.length;
+      data.Followers = data.Followers.length;
+      res.status(200).json(data); //user info
+    } else {
+      res.status(404).json('No user found.');
     }
   } catch (error) {
     console.error(error);
@@ -219,6 +264,57 @@ router.post("/", isNotLoggedIn, async (req, res, next) => {
   } catch (error) {
     console.error(error);
     next(error); //status 500 (error from server.)
+  }
+});
+
+
+router.get("/:userId/posts", async (req, res, next) => {
+  // GET /user/1/posts
+  try {
+    const where = {
+      UserId: req.params.userId
+    };
+    if (parseInt(req.query.lastId)) {
+      //if not initial loading!
+      where.id = { [Op.lt]: parseInt(req.query.lastId) };
+    }
+    // const posts = await Post.findAll({});
+    const posts = await Post.findAll({
+      
+      where,
+      limit: 10,
+      order: [
+        ["createdAt", "DESC"],
+        [Comment, "createdAt", "DESC"],
+      ],
+      include: [
+        {
+          model: Image,
+        },
+        {
+          model: User,
+          attributes: ["id", "nickname"],
+        },
+        {
+          model: Comment,
+          include: [
+            {
+              model: User,
+              attributes: ["id", "nickname"], //no password!
+            },
+          ],
+        },
+        {
+          model: User,
+          as: "Likers",
+          attributes: ["id"],
+        },
+      ],
+    });
+    res.status(200).json(posts);
+  } catch (error) {
+    console.error(error);
+    next(error);
   }
 });
 

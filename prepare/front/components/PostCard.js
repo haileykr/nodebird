@@ -31,6 +31,14 @@ const PostCard = ({ post }) => {
   // const [liked, setLiked] = useState(false);
   const [commentFormOpened, setCommentFormOpened] = useState(false);
 
+  const { me } = useSelector((state) => state.user);
+  // const id = me && me.id;
+  // 위의 식은 아래와 같은 뜻
+  const id = me?.id;
+
+  const liked = post.Likers.find((v) => v.id === id);
+  // "optional chaining 연산자!"
+
   const onLike = useCallback(() => {
     // setLiked((prev) => !prev);
 
@@ -79,13 +87,7 @@ const PostCard = ({ post }) => {
       data: post.id,
     });
   }, [id]);
-  const { me } = useSelector((state) => state.user);
-  // const id = me && me.id;
-  // 위의 식은 아래와 같은 뜻
-  const id = me?.id;
 
-  const liked = post.Likers.find((v) => v.id === id);
-  // "optional chaining 연산자!"
   return (
     <div style={{ marginBottom: 20 }}>
       <Card
