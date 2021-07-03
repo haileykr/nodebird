@@ -12,6 +12,8 @@ import NicknameEditForm from '../components/NicknameEditForm';
 import FollowList from   '../components/FollowList';
 import { LOAD_MY_INFO_REQUEST } from '../reducers/user';
 
+import { backUrl } from "../config/config";
+
 const fetcher = (url) => axios.get(url,{withCredentials:true})
     .then(result =>result.data); //configuration for SWR
 
@@ -23,9 +25,9 @@ const Profile = () => {
     const [followersLimit, setFollowerLimit] = useState(3);
     const [followingsLimit, setFollowingsLimit] = useState(3);
 
-    const {data: followersData, error: followersError} = useSWR(`http://localhost:3065/user/followers?limit=${followersLimit}`,fetcher);
+    const {data: followersData, error: followersError} = useSWR(`${backUrl}/user/followers?limit=${followersLimit}`,fetcher);
     //if both followersData and followersError are null it is still  loading
-    const {data: followingsData, error: followingsError} = useSWR(`http://localhost:3065/user/followings?limit=${followingsLimit}`,fetcher);
+    const {data: followingsData, error: followingsError} = useSWR(`${backUrl}/user/followings?limit=${followingsLimit}`,fetcher);
     
     useEffect(() => {
         if (!(me && me.id)){
