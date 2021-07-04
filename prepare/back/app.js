@@ -16,7 +16,7 @@ const helmet = require("helmet");
 const db = require("./models");
 
 const passportConfig = require("./passports/index");
-const {backUrl} = require("./config/config");
+const { backUrl } = require("./config/config");
 
 dotenv.config();
 const app = express();
@@ -35,26 +35,25 @@ if (process.env.NODE_ENV === "production") {
   app.use(hpp());
   app.use(helmet());
   app.use(
-    cors({ 
-      origin: "http://localhost:3000",
+    cors({
+      origin:"http://babbleheehaw.shop",
       credentials: true,
     })
   );
 } else {
   app.use(morgan("dev"));
   app.use(
-    cors({ 
-      origin:"http://babbleheehaw.shop",
+    cors({
+      origin: true,
       credentials: true,
     })
   );
 }
 
-
 app.use("/", express.static(path.join(__dirname, "uploads")));
 app.use(express.json()); // json format covered
 app.use(express.urlencoded({ extended: true })); //form submit
-
+  
 app.use(cookieParser(process.env.COOKIE_SECRET));
 
 app.use(
@@ -65,8 +64,8 @@ app.use(
     cookie: {
       httpOnly: true, //not accessible via JavaScript
       secure: false, //http
-      domain: process.env.NODE_ENV === 'production'&& '.babbleheehaw.shop' //cookie shared between api.~ and ~
-    }
+      domain: process.env.NODE_ENV === "production" && ".babbleheehaw.shop", //cookie shared between api.~ and ~
+    },
   })
 );
 
