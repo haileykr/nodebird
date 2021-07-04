@@ -45,8 +45,7 @@ if (process.env.NODE_ENV === "production") {
     cors({
       origin: true,
       credentials: true,
-    })
-  );
+    }));
 }
 
 app.use("/", express.static(path.join(__dirname, "uploads")));
@@ -65,8 +64,7 @@ app.use(
       secure: false, //http
       domain: process.env.NODE_ENV === "production" && ".babbleheehaw.shop", //cookie shared between api.~ and ~
     },
-  })
-);
+  }));
 
 app.use(passport.initialize());
 app.use(passport.session());
