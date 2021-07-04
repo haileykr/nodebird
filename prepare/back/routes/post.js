@@ -1,7 +1,10 @@
 const express = require("express");
-const multer = require("multer");
+// const multer = require("multer");
 const path = require("path");
 const fs = require("fs");
+
+const multerS3 = require("multer-s3");
+const AWS = require("aws-sdk");
 
 const { isLoggedIn } = require("./middlewares");
 const { Post, User, Comment, Image, Hashtag } = require("../models");
@@ -15,22 +18,39 @@ try {
   fs.mkdirSync("uploads");
 }
 
-const upload = multer({
-  storage: multer.diskStorage({
-    //on disk for now
-    destination(req, file, done) {
-      done(null, "uploads"); //"uploads"folder
-    },
-    filename(req, file, done) {
-      // ex. photo.png
-      const ext = path.extname(file.originalname); //ex. png
-      const basename = path.basename(file.originalname, ext); //ex. photo
+AWS.config.update({
+  accessKeyId: process.env.S3_ACCESS_KEY_ID,
+  secretAccessKey: process.env.S3_SECRET_ACCESS_KEY,
+  region: 'us-east-2'
+})
+// STORAGE ON BACKEND SERVER (W/O USING AWS)
+// const upload = multer({
+//   storage: multer.diskStorage({
+//     //on disk for now
+//     destination(req, file, done) {
+//       done(null, "uploads"); //"uploads"folder
+//     },
+//     filename(req, file, done) {
+//       // ex. photo.png
+//       const ext = path.extname(file.originalname); //ex. png
+//       const basename = path.basename(file.originalname, ext); //ex. photo
 
-      done(null, basename + "_" + new Date().getTime() + ext); //ex. photo153741923.png
-    },
-  }),
-  limits: { fileSize: 20 * 1024 * 1024 }, //20MB
+//       done(null, basename + "_" + new Date().getTime() + ext); //ex. photo153741923.png
+//     },
+//   }),
+//   limits: { fileSize: 20 * 1024 * 1024 }, //20MB
+// });
+
+const upload = multer({
+  storage: multerS3({
+    s3: new AWS.S3(),
+    bucket: 'babbleheehaw',
+    key(req, file, cb){//storage name
+      cb(null, `original/${Date.now()}_${path.basename(file.originalname)}`)
+    }
+  })
 });
+
 router.post("/", isLoggedIn, upload.none(), async (req, res, next) => {
   // POST /post
   try {
@@ -109,8 +129,8 @@ router.post(
     //upload.none() for json/text only
 
     //this portion is ran once logged in, and the files are uploaded
-    console.log(req.files); //file info shown
-    res.json(req.files.map((v) => v.filename));
+    // res.json(req.files.map((v) => v.filename));
+    res.json(req.files.map((v) => v.location));//with AWS S3
   }
 );
 
