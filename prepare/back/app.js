@@ -40,7 +40,7 @@ if (process.env.NODE_ENV === "production") {
 
 app.use(
   cors({
-    origin: ["http://localhost:3000", "nodebird.com", "http://3.36.50.236"],
+    origin: ["http://localhost:3000", "nodebird.com", "http://www.babbleheehaw.shop"],
     credentials: true,
   })
 );
@@ -71,5 +71,5 @@ app.use("/user", userRouter);
 app.use("/hashtag", hashtagRouter);
 
 app.listen(80, () => {
-  console.log("Server Running on Port #80...");
+  console.log("Server Running on Port #...");
 });
