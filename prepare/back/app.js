@@ -16,7 +16,6 @@ const helmet = require("helmet");
 const db = require("./models");
 
 const passportConfig = require("./passports/index");
-const { backUrl } = require("./config/config");
 
 dotenv.config();
 const app = express();
@@ -53,7 +52,7 @@ if (process.env.NODE_ENV === "production") {
 app.use("/", express.static(path.join(__dirname, "uploads")));
 app.use(express.json()); // json format covered
 app.use(express.urlencoded({ extended: true })); //form submit
-  
+
 app.use(cookieParser(process.env.COOKIE_SECRET));
 
 app.use(
