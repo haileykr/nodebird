@@ -8,7 +8,8 @@ const post = require("./post");
 const user = require("./user");
 
 const env = process.env.NODE_ENV || "development";
-const config = require("../config/config")[env];
+// const config = require("../config/config")[env];
+const config = require("../config/config")["development"];
 const db = {};
 
 const sequelize = new Sequelize(

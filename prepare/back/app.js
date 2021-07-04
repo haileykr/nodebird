@@ -42,6 +42,11 @@ app.use(
   cors({
     origin: ["http://localhost:3000", "nodebird.com", "http://www.babbleheehaw.shop"],
     credentials: true,
+    cookie: {
+      httpOnly: true, //not accessible via JavaScript
+      secure: false, //http
+      domain: process.env.NODE_ENV === 'production'&& '.babbleheehaw.shop' //cookie shared between api.~ and ~
+    }
   })
 );
 app.use("/", express.static(path.join(__dirname, "uploads")));
