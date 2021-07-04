@@ -40,7 +40,7 @@ if (process.env.NODE_ENV === "production") {
 
 app.use(
   cors({
-    origin: ["http://localhost:3000", "nodebird.com", "http://www.babbleheehaw.shop"],
+    origin: ["http://localhost:3000", "nodebird.com", "http://babbleheehaw.shop"],
     credentials: true,
     cookie: {
       httpOnly: true, //not accessible via JavaScript
