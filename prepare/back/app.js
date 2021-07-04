@@ -71,5 +71,5 @@ app.use("/user", userRouter);
 app.use("/hashtag", hashtagRouter);
 
 app.listen(80, () => {
-  console.log("Server Running on Port#3065...");
+  console.log("Server Running on Port #80...");
 });
