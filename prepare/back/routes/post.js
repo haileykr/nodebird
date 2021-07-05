@@ -18,38 +18,39 @@ try {
   fs.mkdirSync("uploads");
 }
 
-// AWS.config.update({
-//   accessKeyId: process.env.S3_ACCESS_KEY_ID,
-//   secretAccessKey: process.env.S3_SECRET_ACCESS_KEY,
-//   region: 'us-east-2',
-// });
-// STORAGE ON BACKEND SERVER (W/O USING AWS)
-const upload = multer({
-  storage: multer.diskStorage({
-    //on disk for now
-    destination(req, file, done) {
-      done(null, "uploads"); //"uploads"folder
-    },
-    filename(req, file, done) {
-      // ex. photo.png
-      const ext = path.extname(file.originalname); //ex. png
-      const basename = path.basename(file.originalname, ext); //ex. photo
-
-      done(null, basename + "_" + new Date().getTime() + ext); //ex. photo153741923.png
-    },
-  }),
-  limits: { fileSize: 20 * 1024 * 1024 }, //20MB
+AWS.config.update({
+  accessKeyId: process.env.S3_ACCESS_KEY_ID,
+  secretAccessKey: process.env.S3_SECRET_ACCESS_KEY,
+  region: 'us-east-2',
 });
-
+// STORAGE ON BACKEND SERVER (W/O USING AWS)
 // const upload = multer({
-//   storage: multerS3({
-//     s3: new AWS.S3(),
-//     bucket: 'babbleheehaw',
-//     key(req, file, cb){//storage name
-//       cb(null, `original/${Date.now()}_${path.basename(file.originalname)}`)
-//     }
-//   })
+//   storage: multer.diskStorage({
+//     //on disk for now
+//     destination(req, file, done) {
+//       done(null, "uploads"); //"uploads"folder
+//     },
+//     filename(req, file, done) {
+//       // ex. photo.png
+//       const ext = path.extname(file.originalname); //ex. png
+//       const basename = path.basename(file.originalname, ext); //ex. photo
+
+//       done(null, basename + "_" + new Date().getTime() + ext); //ex. photo153741923.png
+//     },
+//   }),
+//   limits: { fileSize: 20 * 1024 * 1024 }, //20MB
 // });
+
+const upload = multer({
+  storage: multerS3({
+    s3: new AWS.S3(), //S3 access
+    bucket: 'babbleheehaw',
+    key(req, file, cb){//storage name
+      cb(null, `original/${Date.now()}_${path.basename(file.originalname)}`)
+    }
+  }),
+  limits: {fileSize: 20 * 1024 * 1024},
+});
 
 router.post("/", isLoggedIn, upload.none(), async (req, res, next) => {
   // POST /post
