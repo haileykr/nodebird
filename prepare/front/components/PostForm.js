@@ -84,12 +84,13 @@ const PostForm = () => {
                 <Button type = "primary" style = {{ float:  'right'}} htmlType="submit">Tweet</Button>
             </div>
             <div>
-                
+
             {imagePaths.map((v, i) => (
                 // image preview!
                 <div key = {v} style = {{ display: 'inline-block'}}>
                     {/* <img src = {`${backUrl}/${v}`} style = {{width: '200px'}} alt = {v}></img> */}
-                    <img src = {v} style = {{width: '200px'}} alt = {v}></img>
+                    
+                    <img src =  {v.replace(/\/thumb\//, "/original/")} style = {{width: '200px'}} alt = {v}></img>
                     {/* AWS-S3 */}
                 <div>
                     <Button onClick = {onRemoveImage(i)}>Remove</Button>
