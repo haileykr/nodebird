@@ -131,7 +131,7 @@ router.post(
 
     //this portion is ran once logged in, and the files are uploaded
     // res.json(req.files.map((v) => v.filename));
-    res.json(req.files.map((v) => v.location));//with AWS S3
+    res.json(req.files.map((v) =>  v.location.replace(/\/original\//, "/thumb/")));//with AWS S3
   }
 );
 

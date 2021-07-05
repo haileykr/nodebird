@@ -27,7 +27,7 @@ const ImagesZoom = ({ images, onClose }) => {
                         {images.map((v) => (
                             <ImgWrapper key={v.src}>
                                 {/* <img src={`${backUrl}/${v.src}`} alt={v.src} /> */}
-                                <img src = { `${v.src}`} alt={v.src} />
+                                <img src = {`${v.src.replace(/\/thumb\//,"/original/")}`} alt={v.src} />
                             </ImgWrapper>
                         ))}
                         {/* Slick이 저절로 여기 div들을 carousel로 만들어줌 */}
