@@ -21,7 +21,7 @@ try {
 AWS.config.update({
   accessKeyId: process.env.S3_ACCESS_KEY_ID,
   secretAccessKey: process.env.S3_SECRET_ACCESS_KEY,
-  region: 'us-east-2',
+  region: 'ap-northeast-2',
 });
 // STORAGE ON BACKEND SERVER (W/O USING AWS)
 // const upload = multer({
@@ -44,7 +44,7 @@ AWS.config.update({
 const upload = multer({
   storage: multerS3({
     s3: new AWS.S3(), //S3 access
-    bucket: 'babbleheehaw',
+    bucket: 'wesoodaa',
     key(req, file, cb){//storage name
       cb(null, `original/${Date.now()}_${path.basename(file.originalname)}`)
     }

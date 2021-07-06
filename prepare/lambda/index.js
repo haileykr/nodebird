@@ -6,12 +6,12 @@ const s3 = new AWS.S3();
 // make the 'handler' lambda function run
 // whenver S3 is used!
 exports.handler = async (event, context, callback) => {
-  const Bucket = event.Records[0].s3.bucket.name; // babbleheehaw
-  const Key = decodeURIComponent(event.Records[0].s3.object.key); //let. original/112312321_abc.png
+  const Bucket = event.Records[0].s3.bucket.name; // wesoodaa
+  const Key = decodeURIComponent(event.Records[0].s3.object.key); //let - original/112312321_abc.png
   console.log(Bucket, Key);
 
-  const filename = Key.split("/")[Key.split("/").length - 1]; // ex. 112312321_abc
-  const ext = Key.split(".")[Key.split(".").length - 1].toLowerCase(); //ex.  png
+  const filename = Key.split("/")[Key.split("/").length - 1]; // ex - 112312321_abc
+  const ext = Key.split(".")[Key.split(".").length - 1].toLowerCase();//png
   const requiredFormat = ext === "jpg" ? "jpeg" : ext;
   console.log("filename", filename, "ext", ext);
 
