@@ -13,6 +13,16 @@ import LogInForm from "../components/LogInForm";
 import Router from "next/router";
 
 const Global = createGlobalStyle`
+.ant-menu, .ant-menu a{
+  background-color: #0A1931 !important;
+  color: #EFEFEF !important;
+}
+
+.ant-menu #brand {
+
+  font-weight:bold !important;
+  color: #FFC947  !important;
+}
 .ant-row {
     margin-right: 0 !important;
     margin-left: 0 !important;
@@ -20,11 +30,22 @@ const Global = createGlobalStyle`
 
 .ant-col:first-child {
     padding-left: 0 !important;
+
 }
 
 
 .ant-col:last-child {
     padding-right: 0 !important;
+}
+
+.ant-btn-primary { 
+  background-color: #185ADB !important;
+
+  border: none !important;
+}
+
+.ant-btn-primary:hover {
+  background-color: #39A2DB !important;
 }
 `;
 
@@ -49,7 +70,7 @@ const Applayout = ({ children }) => {
       <Menu mode="horizontal">
         <Menu.Item>
           <Link href="/">
-            <a>Nodebird</a>
+            <a id = "brand">WE:SOODA</a>
           </Link>
         </Menu.Item>
         <Menu.Item>
@@ -68,20 +89,20 @@ const Applayout = ({ children }) => {
         </Menu.Item>
       </Menu>
       <Row gutter={8}>
-        <Col xs={24} md={6}>
+        <Col xs={24}md= {6}>
           {/* {isLoggedIn ? <UserProfile setIsLoggedIn = {setIsLoggedIn}/> : <LogInForm setIsLoggedIn={setIsLoggedIn}/>} */}
           {me ? <UserProfile /> : <LogInForm />}
         </Col>
-        <Col xs={24} md={12}>
+        <Col xs={24}md= {14}>
           {children}
         </Col>
-        <Col xs={24} md={6}>
+        <Col xs={24} md={4}>
           <a
-            href="https://twitter.com"
+            href="https://amazon.com/books-used-books-textbooks"
             target="_blank"
             rel="noreferrer noopener"
           >
-            Twitter
+            Amazon
           </a>
         </Col>
       </Row>
