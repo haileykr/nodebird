@@ -8,6 +8,12 @@ const postRouter = require("./routes/post");
 const postsRouter = require("./routes/posts");
 const userRouter = require("./routes/user");
 const hashtagRouter = require("./routes/hashtag");
+
+
+
+
+
+const bookRouter = require("./routes/book");
 const morgan = require("morgan");
 const path = require("path");
 const hpp = require("hpp");
@@ -78,6 +84,9 @@ app.use("/posts", postsRouter);
 app.use("/user", userRouter);
 app.use("/hashtag", hashtagRouter);
 
-app.listen(80, () => {
+
+app.use("/book",bookRouter);
+
+app.listen(8080, () => {
   console.log("Server Running on Port #...");
 });

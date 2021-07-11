@@ -13,13 +13,16 @@ import LogInForm from "../components/LogInForm";
 import Router from "next/router";
 
 const Global = createGlobalStyle`
+body {
+  background-color: #EFEFEF !important;
+  color:#0A1931  !important;
+}
 .ant-menu, .ant-menu a{
   background-color: #0A1931 !important;
   color: #EFEFEF !important;
 }
 
 .ant-menu #brand {
-
   font-weight:bold !important;
   color: #FFC947  !important;
 }
@@ -30,7 +33,6 @@ const Global = createGlobalStyle`
 
 .ant-col:first-child {
     padding-left: 0 !important;
-
 }
 
 
@@ -40,7 +42,6 @@ const Global = createGlobalStyle`
 
 .ant-btn-primary { 
   background-color: #185ADB !important;
-
   border: none !important;
 }
 
@@ -57,11 +58,10 @@ const Applayout = ({ children }) => {
   // const [isLoggedIn, setIsLoggedIn] = useState(false);
   const { me } = useSelector((state) => state.user);
 
-  const [searchInput,onChangeSearchInput] =useInput('');
-
+  const [searchInput, onChangeSearchInput] = useInput("");
 
   const onSearch = useCallback(() => {
-      Router.push(`/hashtag/${searchInput}`);
+    Router.push(`/hashtag/${searchInput}`);
   }, [searchInput]);
 
   return (
@@ -70,7 +70,7 @@ const Applayout = ({ children }) => {
       <Menu mode="horizontal">
         <Menu.Item>
           <Link href="/">
-            <a id = "brand">WE:SOODA</a>
+            <a id="brand">WE:SOODA</a>
           </Link>
         </Menu.Item>
         <Menu.Item>
@@ -78,9 +78,17 @@ const Applayout = ({ children }) => {
             <a>Profile</a>
           </Link>
         </Menu.Item>
+
+        <Menu.Item>
+          <Link href="/book/popular">
+            <a>BestSellers of the Week</a>
+          </Link>
+        </Menu.Item>
+
         <Menu.Item>
           <SearchInput
             style={{ verticalAlign: "middle" }}
+            placeholder="Search #tags"
             enterButton
             value={searchInput}
             onChange={onChangeSearchInput}
@@ -89,21 +97,35 @@ const Applayout = ({ children }) => {
         </Menu.Item>
       </Menu>
       <Row gutter={8}>
-        <Col xs={24}md= {6}>
+        <Col xs={24} md={6}>
           {/* {isLoggedIn ? <UserProfile setIsLoggedIn = {setIsLoggedIn}/> : <LogInForm setIsLoggedIn={setIsLoggedIn}/>} */}
           {me ? <UserProfile /> : <LogInForm />}
         </Col>
-        <Col xs={24}md= {14}>
+        <Col xs={24} md={14}>
           {children}
         </Col>
         <Col xs={24} md={4}>
-          <a
-            href="https://amazon.com/books-used-books-textbooks"
-            target="_blank"
-            rel="noreferrer noopener"
-          >
-            Amazon
-          </a>
+          <h3>Want to get more books? </h3>
+          <ul>
+            <li>
+              <a
+                href="https://amazon.com/books-used-books-textbooks"
+                target="_blank"
+                rel="noreferrer noopener"
+              >
+                Amazon
+              </a>
+            </li>
+            <li>
+              <a
+                href="https://aladdin.co.kr"
+                target="_blank"
+                rel="noreferrer noopener"
+              >
+                Aladdin
+              </a>
+            </li>
+          </ul>
         </Col>
       </Row>
     </div>
