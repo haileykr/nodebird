@@ -16,7 +16,7 @@ router.get("/popular", async (req, res, next) => {
     
     const bookDataOnly =nytBookData.results.books;
 
-    res.status(200).json(bookDataOnly);
+    res.status(200).send(bookDataOnly);
   } catch (error) {
     console.error(error);
     next(error);

@@ -8,11 +8,6 @@ const postRouter = require("./routes/post");
 const postsRouter = require("./routes/posts");
 const userRouter = require("./routes/user");
 const hashtagRouter = require("./routes/hashtag");
-
-
-
-
-
 const bookRouter = require("./routes/book");
 const morgan = require("morgan");
 const path = require("path");
@@ -41,7 +36,7 @@ if (process.env.NODE_ENV === "production") {
   app.use(helmet());
   app.use(
     cors({
-      origin:"http://wesoodaa.site",
+      origin: "http://wesoodaa.site",
       credentials: true,
     })
   );
@@ -51,7 +46,8 @@ if (process.env.NODE_ENV === "production") {
     cors({
       origin: true,
       credentials: true,
-    }));
+    })
+  );
 }
 
 app.use("/", express.static(path.join(__dirname, "uploads")));
@@ -70,7 +66,8 @@ app.use(
       secure: false, //http
       domain: process.env.NODE_ENV === "production" && ".wesoodaa.site", //cookie shared between api.~ and ~
     },
-  }));
+  })
+);
 
 app.use(passport.initialize());
 app.use(passport.session());
@@ -83,9 +80,7 @@ app.use("/post", postRouter);
 app.use("/posts", postsRouter);
 app.use("/user", userRouter);
 app.use("/hashtag", hashtagRouter);
-
-
-app.use("/book",bookRouter);
+app.use("/book", bookRouter);
 
 app.listen(80, () => {
   console.log("Server Running on Port #...");
