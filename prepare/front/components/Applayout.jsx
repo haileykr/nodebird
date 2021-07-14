@@ -118,11 +118,12 @@ const Applayout = ({ children }) => {
             </li>
             <li>
               <a
-                href="https://aladdin.co.kr"
+                href="https://aladin.co.kr"
                 target="_blank"
                 rel="noreferrer noopener"
               >
-                Aladdin
+                
+                Aladin(Kor)
               </a>
             </li>
           </ul>
