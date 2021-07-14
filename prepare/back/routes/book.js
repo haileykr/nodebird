@@ -16,7 +16,7 @@ router.get("/popular", async (req, res, next) => {
 
     console.log(nytBookData);
     console.log(nytBookData.data);
-    
+
     // const bookDataOnly =nytBookData.data.results.books;
 
     res.status(200).send(nytBookData);
