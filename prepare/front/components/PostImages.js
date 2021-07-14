@@ -4,8 +4,6 @@ import { PlusOutlined } from "@ant-design/icons";
 
 import ImagesZoom from "./ImagesZoom";
 
-import { backUrl } from "../config/config";
-
 const PostImages = ({ images }) => {
   const [showImagesZoom, setShowImagesZoom] = useState(false);
   const onZoom = useCallback(() => {
@@ -21,7 +19,6 @@ const PostImages = ({ images }) => {
         <img
           role="presentation"
           height="400"
-          width="400"
           src={images[0].src}
           alt={images[0].src}
           onClick={onZoom}
