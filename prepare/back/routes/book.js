@@ -14,12 +14,10 @@ router.get("/popular", async (req, res, next) => {
       url: `https://api.nytimes.com/svc/books/v3/lists/current/combined-print-and-e-book-fiction.json?api-key=${process.env.NYT_API_KEY}`,
     });
 
-    console.log(nytBookData);
-    console.log(nytBookData.data);
+    const bookDataOnly =nytBookData.data.results;
 
-    // const bookDataOnly =nytBookData.data.results.books;
-
-    res.status(200).send(nytBookData);
+    
+    res.status(200).json(bookDataOnly);
   } catch (error) {
     console.error(error);
     next(error);

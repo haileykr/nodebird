@@ -35,7 +35,7 @@ const PopularBooks = () => {
           <h1>TOP 15 BESTSELLERS (in Fiction, this week)</h1>
           <h3>Source: New York Times</h3>
           {popularBooksData &&
-            popularBooksData.map((book) => (
+            popularBooksData.books.map((book) => (
               <BestSeller bestseller={book} key={book.rank} />
             ))}
         </div>
