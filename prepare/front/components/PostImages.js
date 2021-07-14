@@ -18,7 +18,7 @@ const PostImages = ({ images }) => {
         {/* <img role="presentation" src = {`${backUrl}/${images[0].src}`} alt = {images[0].src} onClick = {onZoom} /> */}
         <img
           role="presentation"
-          style="height: 400px;width:auto"
+          style={{ width: "50%", display: "inline-block" }}
           src={images[0].src}
           alt={images[0].src}
           onClick={onZoom}
