@@ -15,7 +15,6 @@ const PopularBooks = () => {
     `${backUrl}/book/popular`,
     fetcher
   );
-
   if (popularBooksError) {
     console.error(popularBooksError);
     return "Error occured while fetching popular book data";
@@ -35,7 +34,7 @@ const PopularBooks = () => {
           <h1>TOP 15 BESTSELLERS (in Fiction, this week)</h1>
           <h3>Source: New York Times</h3>
           {popularBooksData &&
-            popularBooksData.books.map((book) => (
+            popularBooksData.map((book) => (
               <BestSeller bestseller={book} key={book.rank} />
             ))}
         </div>

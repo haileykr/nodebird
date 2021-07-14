@@ -9,12 +9,14 @@ dotenv.config();
 router.get("/popular", async (req, res, next) => {
   // GET /book/popular
   try {
-    const nytBookData = await axios.get(`https://api.nytimes.com/svc/books/v3/lists/current/combined-print-and-e-book-fiction.json?api-key=${process.env.NYT_API_KEY}`);
-
-    const bookDataOnly =nytBookData.data.results;
-
+    const nytBookData = await axios({
+      method: "GET",
+      url: `https://api.nytimes.com/svc/books/v3/lists/current/combined-print-and-e-book-fiction.json?api-key=${process.env.NYT_API_KEY}`,
+    });
     
-    res.status(200).json(bookDataOnly);
+    const bookDataOnly =nytBookData.data.results.books;
+
+    res.status(200).send(bookDataOnly);
   } catch (error) {
     console.error(error);
     next(error);
