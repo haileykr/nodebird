@@ -13,6 +13,9 @@ router.get("/popular", async (req, res, next) => {
       method: "GET",
       url: `https://api.nytimes.com/svc/books/v3/lists/current/combined-print-and-e-book-fiction.json?api-key=${process.env.NYT_API_KEY}`,
     });
+
+    console.log(nytBookData);
+    console.log(nytBookData.data);
     
     // const bookDataOnly =nytBookData.data.results.books;
 
