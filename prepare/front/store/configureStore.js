@@ -22,7 +22,7 @@ const configureStore = () => {
     const middlewares = [sagaMiddleware, loggerMiddleware];
     const enhancer = process.env.NODE_ENV === 'production'
         // ? compose(applyMiddleware(...middlewares)) //개발용
-        ? compose(applyMiddleware(sageMiddleware))
+        ? compose(applyMiddleware(sagaMiddleware))
         : composeWithDevTools(applyMiddleware(...middlewares))
     const store = createStore(reducer,enhancer);
     // store.dispatch({
