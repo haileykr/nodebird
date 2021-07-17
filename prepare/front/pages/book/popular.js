@@ -27,7 +27,7 @@ const PopularBooks = () => {
     <>
       <Head>
         <meta charSet="utf-8" />
-        <title>Bestsellers - NodeBird</title>
+        <title>Bestsellers - WeSoodaa</title>
       </Head>
       <Applayout>
         <div style={{ margin: 15 }}>

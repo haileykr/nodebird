@@ -12,7 +12,7 @@ const About = () => {
   return (
     <Applayout>
       <Head>
-        <title> About | NodeBird</title>
+        <title> About - WeSoodaa</title>
       </Head>
       {userInfo ? (
         <Card
@@ -37,7 +37,7 @@ const About = () => {
           <Card.Meta
             avatar={<Avatar>{userInfo.nickname[0]}</Avatar>}
             title={userInfo.nickname}
-            description="NodeBird"
+            description="WeSoodaa"
           />
         </Card>
       ) : null}
@@ -45,13 +45,15 @@ const About = () => {
   );
 };
 // export const getStaticProps = wrapper.getStaticProps(async (context) => {
-export const getServerSideProps = wrapper.getServerSideProps(async (context) => {
-  context.store.dispatch({
-    type: LOAD_USER_REQUEST,
-    data: 1,
-  });
-  context.store.dispatch(END);
-  await context.store.sagaTask.toPromise();
-});
+export const getServerSideProps = wrapper.getServerSideProps(
+  async (context) => {
+    context.store.dispatch({
+      type: LOAD_USER_REQUEST,
+      data: 1,
+    });
+    context.store.dispatch(END);
+    await context.store.sagaTask.toPromise();
+  }
+);
 
 export default About;

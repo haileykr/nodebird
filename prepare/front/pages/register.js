@@ -79,7 +79,7 @@ const Register = () => {
     <>
       <Applayout>
         <Head>
-          <title> Register - NodeBird</title>
+          <title> Register - WeSoodaa</title>
         </Head>
         <Form onFinish={onSubmit}>
           <div>

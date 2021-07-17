@@ -60,7 +60,7 @@ const Profile = () => {
         <>
             <Head>
                 <meta charSet="utf-8" />
-                <title>My Profile - NodeBird</title>
+                <title>My Profile - WeSoodaa</title>
             </Head>
             <Applayout>
                 <NicknameEditForm />
