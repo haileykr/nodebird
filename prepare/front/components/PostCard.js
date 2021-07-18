@@ -116,7 +116,7 @@ const PostCard = ({ post }) => {
                 {/* 로그인 시에만 보이게 */}
                 {id && post.User.id === id ? (
                   <>
-                    <Button>Edit</Button>
+                    {!post.RetweetId && <Button>Edit</Button>}
                     <Button
                       type="danger"
                       loading={removePostLoading}
@@ -152,7 +152,7 @@ const PostCard = ({ post }) => {
             </div>
             <Card.Meta
               avatar={
-                <Link href={`/user/${post.Retweet.User.id}`}>
+                <Link prefetch = {false} href={`/user/${post.Retweet.User.id}`}>
                   <a>
                     <Avatar>{post.Retweet.User.nickname[0]}</Avatar>{" "}
                   </a>
@@ -169,7 +169,7 @@ const PostCard = ({ post }) => {
             </div>
             <Card.Meta
               avatar={
-                <Link href={`/user/${post.User.id}`}>
+                <Link prefetch = {false} href={`/user/${post.User.id}`}>
                   <a>
                     <Avatar>{post.User.nickname[0]}</Avatar>{" "}
                   </a>
@@ -196,7 +196,7 @@ const PostCard = ({ post }) => {
                 <Comment
                   author={item.User.nickname}
                   avatar={
-                    <Link href={`/user/${item.User.id}`}>
+                    <Link prefetch = {false} href={`/user/${item.User.id}`}>
                       <a>
                         <Avatar>{item.User.nickname[0]}</Avatar>{" "}
                       </a>
