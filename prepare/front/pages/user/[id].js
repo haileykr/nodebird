@@ -19,7 +19,7 @@ const User = () => {
   const dispatch = useDispatch();
   const router = useRouter();
   const { id } = router.query;
-  const { userInfo } = useSelector((state) => state.user);
+  const { userInfo,me } = useSelector((state) => state.user);
   const { mainPosts, hasMorePost, loadPostsLoading } = useSelector(
     (state) => state.post
   );
@@ -49,7 +49,7 @@ const User = () => {
 
   return (
     <Applayout>
-      {userInfo ? (
+      {userInfo &&(userInfo.id !== me?.id) ? (
         <>
           <Head>
             <title> {userInfo.nickname}'s Posts</title>
@@ -74,6 +74,7 @@ const User = () => {
           </Head>
 
           <Card
+            style = {{marginBottom: 20}}
             actions={[
               <div key="twit">
                 Tweets
