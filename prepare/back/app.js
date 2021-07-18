@@ -36,7 +36,7 @@ if (process.env.NODE_ENV === "production") {
   app.use(helmet());
   app.use(
     cors({
-      origin: "http://wesoodaa.site",
+      origin: "https://wesoodaa.site",
       credentials: true,
     })
   );
