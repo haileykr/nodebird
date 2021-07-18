@@ -49,7 +49,7 @@ const User = () => {
 
   return (
     <Applayout>
-      {userInfo &&(userInfo.id !== me?.id) ? (
+      {userInfo  ? ( 
         <>
           <Head>
             <title> {userInfo.nickname}'s Posts</title>
