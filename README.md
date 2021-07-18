@@ -5,7 +5,7 @@ Web App for Book Lovers  📔
 Built with [React.js + Redux + Redux-Saga + Next.js] + [Node.js + MySQL] + [Nginx + AWS]
 
 
-[https://wesoodaa.site](https://wesoodaa.site)
+[WeSoodaa Web App](https://wesoodaa.site)
 
 
 ![main_capture_page](./prepare/front/public/readMeImg/wesoodaa.png)
