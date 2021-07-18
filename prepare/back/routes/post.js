@@ -21,7 +21,7 @@ try {
 AWS.config.update({
   accessKeyId: process.env.S3_ACCESS_KEY_ID,
   secretAccessKey: process.env.S3_SECRET_ACCESS_KEY,
-  region: 'ap-northeast-2',
+  region: "ap-northeast-2",
 });
 // STORAGE ON BACKEND SERVER (W/O USING AWS)
 // const upload = multer({
@@ -44,12 +44,13 @@ AWS.config.update({
 const upload = multer({
   storage: multerS3({
     s3: new AWS.S3(), //S3 access
-    bucket: 'wesoodaa',
-    key(req, file, cb){//storage name
-      cb(null, `original/${Date.now()}_${path.basename(file.originalname)}`)
-    }
+    bucket: "wesoodaa",
+    key(req, file, cb) {
+      //storage name
+      cb(null, `original/${Date.now()}_${path.basename(file.originalname)}`);
+    },
   }),
-  limits: {fileSize: 20 * 1024 * 1024},
+  limits: { fileSize: 20 * 1024 * 1024 },
 });
 
 router.post("/", isLoggedIn, upload.none(), async (req, res, next) => {
@@ -104,7 +105,6 @@ router.post("/", isLoggedIn, upload.none(), async (req, res, next) => {
         },
         {
           model: User, //Post Author
-
           attributes: ["id", "nickname"],
         },
         {
@@ -131,7 +131,9 @@ router.post(
 
     //this portion is ran once logged in, and the files are uploaded
     // res.json(req.files.map((v) => v.filename));
-    res.json(req.files.map((v) =>  v.location.replace(/\/original\//, "/thumb/")));//with AWS S3
+    res.json(
+      req.files.map((v) => v.location.replace(/\/original\//, "/thumb/"))
+    ); //with AWS S3
   }
 );
 
@@ -193,6 +195,43 @@ router.delete("/:postId/unlike", isLoggedIn, async (req, res, next) => {
     }
     await post.removeLikers(req.user.id);
     res.json({ PostId: post.id, UserId: req.user.id });
+  } catch (error) {
+    console.error(error);
+    next(error);
+  }
+});
+
+router.patch("/:postId", isLoggedIn, async (req, res) => {
+  //PATCH /post/#
+  const hashtags = req.body.content.match(/#[^\s#]+/g);
+
+  try {
+    await Post.update(
+      {
+        content: req.body.content,
+      },
+      {
+        where: {
+          id: req.params.postId,
+          UserId: req.user.id,
+        },
+      }
+    );
+
+    const post = await Post.findOne({ where: { id: req.params.postId } });
+    if (hashtags) {
+      const result = await Promise.all(
+        hashtags.map((tag) =>
+          Hashtag.findOrCreate({
+            where: { name: tag.slice(1).toLowerCase() },
+          })
+        )
+      );
+      await post.setHashtags(result.map((v) => v[0]));
+    }
+    res
+      .status(200)
+      .json({ PostId: parseInt(req.params.postId), content: req.body.content });
   } catch (error) {
     console.error(error);
     next(error);

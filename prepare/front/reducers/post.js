@@ -16,10 +16,14 @@ export const initialState = {
   loadPostLoading: false,
   loadPostDone: false,
   loadPostError: null,
-  
+
   addPostLoading: false,
   addPostDone: false,
   addPostError: null,
+
+  updatePostLoading: false,
+  updatePostDone: false,
+  updatePostError: null,
 
   removePostLoading: false,
   removePostDone: false,
@@ -47,7 +51,7 @@ export const initialState = {
 
   retweetLoading: false,
   retweetDone: false,
-  retweetError: null
+  retweetError: null,
 };
 
 // export const generateDummyPost = (number) =>
@@ -98,6 +102,10 @@ export const LOAD_HASHTAG_POSTS_FAILURE = "LOAD_HASHTAG_POSTS_FAILURE";
 export const ADD_POST_REQUEST = "ADD_POST_REQUEST";
 export const ADD_POST_SUCCESS = "ADD_POST_SUCCESS";
 export const ADD_POST_FAILURE = "ADD_POST_FAILURE";
+
+export const UPDATE_POST_REQUEST = "UPDATE_POST_REQUEST";
+export const UPDATE_POST_SUCCESS = "UPDATE_POST_SUCCESS";
+export const UPDATE_POST_FAILURE = "UPDATE_POST_FAILURE";
 
 export const REMOVE_POST_REQUEST = "REMOVE_POST_REQUEST";
 export const REMOVE_POST_SUCCESS = "REMOVE_POST_SUCCESS";
@@ -175,9 +183,9 @@ const reducer = (state = initialState, action) => {
       case LOAD_POSTS_SUCCESS:
         //제일 위에 보여주기 위해 앞에다 추가
         draft.loadPostsLoading = false;
-        draft.hasMorePost=action.data.length===10;
+        draft.hasMorePost = action.data.length === 10;
         draft.loadPostsDone = true;
-        draft.mainPosts =draft.mainPosts.concat(action.data); 
+        draft.mainPosts = draft.mainPosts.concat(action.data);
         break;
       case LOAD_USER_POSTS_FAILURE:
       case LOAD_HASHTAG_POSTS_FAILURE:
@@ -215,6 +223,22 @@ const reducer = (state = initialState, action) => {
       case ADD_POST_FAILURE:
         draft.addPostLoading = false;
         draft.addPostError = action.error;
+        break;
+      case UPDATE_POST_REQUEST:
+        draft.updatePostLoading = true;
+        draft.updatePostDone = false;
+        draft.updatePostError = null;
+        break;
+      case UPDATE_POST_SUCCESS:
+        draft.mainPosts = draft.mainPosts.find(
+          (v) => v.id === action.data.PostId
+        ).content = action.data.content;
+        draft.updatePostLoading = false;
+        draft.updatePostDone = true;
+        break;
+      case UPDATE_POST_FAILURE:
+        draft.updatePostLoading = false;
+        draft.updatePostError = action.error;
         break;
       case REMOVE_POST_REQUEST:
         draft.removePostLoading = true;
@@ -294,7 +318,7 @@ const reducer = (state = initialState, action) => {
         draft.uploadImagesError = null;
         break;
       case UPLOAD_IMAGES_SUCCESS:
-        draft.imagePaths =draft.imagePaths.concat(action.data); //getting filenmaes from res.json
+        draft.imagePaths = draft.imagePaths.concat(action.data); //getting filenmaes from res.json
         draft.uploadImagesLoading = false;
         draft.uploadImagesDone = true;
         break;

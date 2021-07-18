@@ -43,6 +43,28 @@ const PostCard = ({ post }) => {
   const liked = post.Likers.find((v) => v.id === id);
   // "optional chaining  OPERATOR!"
 
+  const [editMode, setEditMode] = useState(false);
+
+  const onClickUpdate = useCallback(() => {
+    setEditMode(true);
+  }, []);
+
+  const onCancelUpdatePost = useCallback(() => {
+    setEditMode(false);
+  }, []);
+  const onChangePost = useCallback(
+    (editText) => () => {
+      dispatch({
+        type: UPDATE_POST_REQUEST,
+        data: {
+          PostId: post.id,
+          content: editText,
+        },
+      });
+    },
+    [post]
+  );
+
   const onLike = useCallback(() => {
     // setLiked((prev) => !prev);
 
@@ -116,7 +138,9 @@ const PostCard = ({ post }) => {
                 {/* 로그인 시에만 보이게 */}
                 {id && post.User.id === id ? (
                   <>
-                    {!post.RetweetId && <Button>Edit</Button>}
+                    {!post.RetweetId && (
+                      <Button onClick={onClickUpdate}>Edit</Button>
+                    )}
                     <Button
                       type="danger"
                       loading={removePostLoading}
@@ -152,14 +176,21 @@ const PostCard = ({ post }) => {
             </div>
             <Card.Meta
               avatar={
-                <Link prefetch = {false} href={`/user/${post.Retweet.User.id}`}>
+                <Link prefetch={false} href={`/user/${post.Retweet.User.id}`}>
                   <a>
                     <Avatar>{post.Retweet.User.nickname[0]}</Avatar>{" "}
                   </a>
                 </Link>
               }
               title={post.Retweet.User.nickname}
-              description={<PostCardContent postData={post.Retweet.content} />}
+              description={
+                <PostCardContent
+                  editMode={editMode}
+                  onChangePost={onChangePost}
+                  onCancelUpdatePost={onCancelUpdatePost}
+                  postData={post.Retweet.content}
+                />
+              }
             />
           </Card>
         ) : (
@@ -169,14 +200,20 @@ const PostCard = ({ post }) => {
             </div>
             <Card.Meta
               avatar={
-                <Link prefetch = {false} href={`/user/${post.User.id}`}>
+                <Link prefetch={false} href={`/user/${post.User.id}`}>
                   <a>
                     <Avatar>{post.User.nickname[0]}</Avatar>{" "}
                   </a>
                 </Link>
               }
               title={post.User.nickname}
-              description={<PostCardContent postData={post.content} />}
+              description={
+                <PostCardContent
+                  postData={post.content}
+                  onChangePost={onChangePost}
+                  onCancelUpdatePost={onCancelUpdatePost}
+                />
+              }
             />
           </>
         )}
@@ -196,7 +233,7 @@ const PostCard = ({ post }) => {
                 <Comment
                   author={item.User.nickname}
                   avatar={
-                    <Link prefetch = {false} href={`/user/${item.User.id}`}>
+                    <Link prefetch={false} href={`/user/${item.User.id}`}>
                       <a>
                         <Avatar>{item.User.nickname[0]}</Avatar>{" "}
                       </a>

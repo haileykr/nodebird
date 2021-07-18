@@ -22,6 +22,9 @@ import {
   ADD_POST_SUCCESS,
   ADD_POST_FAILURE,
   ADD_POST_REQUEST,
+  UPDATE_POST_SUCCESS,
+  UPDATE_POST_FAILURE,
+  UPDATE_POST_REQUEST,
   REMOVE_POST_SUCCESS,
   REMOVE_POST_FAILURE,
   REMOVE_POST_REQUEST,
@@ -146,6 +149,26 @@ function* addPost(action) {
     console.error(err);
     yield put({
       type: ADD_POST_FAILURE,
+      error: err.response.data,
+    });
+  }
+}
+
+function updatePostAPI(data) {
+  return axios.patch(`/post/${data.PostId}`,data);
+}
+
+function* updatePost(action) {
+  try {
+    const result = yield call(updatePostAPI, action.data);
+    yield put({
+      type: UPDATE_POST_SUCCESS,
+      data: result.data, 
+    });
+  } catch (err) {
+    console.error(err);
+    yield put({
+      type: UPDATE_POST_FAILURE,
       error: err.response.data,
     });
   }
@@ -297,6 +320,10 @@ function* watchAddPost() {
   yield takeLatest(ADD_POST_REQUEST, addPost);
 }
 
+function* watchUpdatePost() {
+  yield takeLatest(UPDATE_POST_REQUEST, updatePost);
+}
+
 function* watchRemovePost() {
   yield takeLatest(REMOVE_POST_REQUEST, removePost);
 }
@@ -328,6 +355,7 @@ export default function* postSaga() {
     fork(watchUserLoadPosts),
     fork(watchLoadPost),
     fork(watchAddPost),
+    fork(watchUpdatePost), 
     fork(watchRemovePost),
     fork(watchAddComment),
     fork(watchLikePost),
