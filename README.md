@@ -8,9 +8,7 @@ Built with [React.js + Redux + Redux-Saga + Next.js] + [Node.js + MySQL] + [Ngin
 [https://wesoodaa.site](https://wesoodaa.site)
 
 
-![main_page_capture](./prepare/front/public/readMeImg/wesoodaa_techstack.png)
-
-
+![main_capture_page](./prepare/front/public/readMeImg/wesoodaa.png)
 ## Functionalities
 1. Post Anything about Books You Love!
 - Share your book stories with other book lovers.
