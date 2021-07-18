@@ -65,11 +65,11 @@ const User = () => {
             />
             <meta
               property="og:image"
-              content={"http://wesoodaa.com/favicon.ico"}
+              content={"https://wesoodaa.com/favicon.ico"}
             />
             <meta
               property="og:url"
-              content={`http://wesoodaa.com/user/${id}`}
+              content={`https://wesoodaa.com/user/${id}`}
             />
           </Head>
 
