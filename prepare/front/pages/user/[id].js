@@ -65,7 +65,7 @@ const User = () => {
             />
             <meta
               property="og:image"
-              content={"http://wesoodaa.com/favicon.png"}
+              content={"http://wesoodaa.com/favicon.ico"}
             />
             <meta
               property="og:url"

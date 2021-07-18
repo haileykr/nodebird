@@ -37,7 +37,7 @@ const Post = () => {
               content={
                 singlePost.Images[0]
                   ? singlePost.Images[0].src
-                  : "http://wesoodaa.site/favicon.png"
+                  : "http://wesoodaa.site/favicon.ico"
               }
             />
             <meta
