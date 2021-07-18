@@ -52,6 +52,7 @@ const PostCard = ({ post }) => {
   const onCancelUpdatePost = useCallback(() => {
     setEditMode(false);
   }, []);
+  
   const onChangePost = useCallback(
     (editText) => () => {
       dispatch({
@@ -67,13 +68,10 @@ const PostCard = ({ post }) => {
 
   const onLike = useCallback(() => {
     // setLiked((prev) => !prev);
-
     // prev has the previous state. useState -liked/setliked
-
     if (!id) {
       return alert("Login required");
     }
-
     return dispatch({
       type: LIKE_POST_REQUEST,
       data: post.id,
@@ -89,6 +87,7 @@ const PostCard = ({ post }) => {
       data: post.id,
     });
   }, []);
+
   const onToggleComment = useCallback(() => {
     setCommentFormOpened((prev) => !prev);
   }, []);
@@ -97,7 +96,6 @@ const PostCard = ({ post }) => {
     if (!id) {
       return alert("Login required");
     }
-
     return dispatch({
       type: REMOVE_POST_REQUEST,
       data: post.id,
