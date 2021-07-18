@@ -4,9 +4,10 @@ Web App for Book Lovers  📔
 
 Built with [React.js + Redux + Redux-Saga + Next.js] + [Node.js + MySQL] + [Nginx + AWS]
 
-[WeSoodaa Web App](https://wesoodaa.site)
 
-[main_page](./prepare/front/public/wesoodaa.png)
+[https://wesoodaa.site](https://wesoodaa.site)
+
+[main_page](./prepare/front/public/readMeImg/wesoodaa.png)
 <br />
 
 ## Functionalities
@@ -20,7 +21,7 @@ Built with [React.js + Redux + Redux-Saga + Next.js] + [Node.js + MySQL] + [Ngin
 - Follow other users you like, and check out who are following you as well! <br />
 
 ## Tech Stack
-![WeSoodaa_Tech_Stack](./public/readMeImg/wesoodaa_techstack.png)
+![WeSoodaa_Tech_Stack](./prepare/front/public/readMeImg/wesoodaa_techstack.png)
 
 - Front-end: React.js + Redux (State Management) + Redux-Saga (Async Actions Management) + Next.js (Server-Side Rendering)
 - Back-end: Node.js + MySQL
