@@ -15,10 +15,10 @@ import {
 
 import PostImages from "./PostImages";
 import CommentForm from "./CommentForm";
-
 import PostCardContent from "./PostCardContent";
 import FollowButton from "./FollowButton";
 import {
+  UPDATE_POST_REQUEST,
   REMOVE_POST_REQUEST,
   LIKE_POST_REQUEST,
   UNLIKE_POST_REQUEST,
@@ -52,7 +52,7 @@ const PostCard = ({ post }) => {
   const onCancelUpdatePost = useCallback(() => {
     setEditMode(false);
   }, []);
-  
+
   const onChangePost = useCallback(
     (editText) => () => {
       dispatch({
@@ -183,7 +183,6 @@ const PostCard = ({ post }) => {
               title={post.Retweet.User.nickname}
               description={
                 <PostCardContent
-                  editMode={editMode}
                   onChangePost={onChangePost}
                   onCancelUpdatePost={onCancelUpdatePost}
                   postData={post.Retweet.content}
@@ -207,6 +206,7 @@ const PostCard = ({ post }) => {
               title={post.User.nickname}
               description={
                 <PostCardContent
+                  editMode={editMode}
                   postData={post.content}
                   onChangePost={onChangePost}
                   onCancelUpdatePost={onCancelUpdatePost}

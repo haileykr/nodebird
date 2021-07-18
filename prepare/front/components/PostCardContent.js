@@ -1,4 +1,4 @@
-import React, { useEffect, useState,useCallback }from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import { useSelector } from "react-redux";
 import Link from "next/link";
 import PropTypes from "prop-types";
@@ -19,15 +19,16 @@ const PostCardContent = ({
   // props can't be changed
   // but states can be!! so add this line
   const [editText, setEditText] = useState(postData);
-  const onChangeText = useCallback((e) => {
-    setEditText(e.target.value);
-  });
 
   useEffect(() => {
     if (updatePostDone) {
       onCancelUpdatePost();
     }
   }, [updatePostDone]);
+
+  const onChangeText = useCallback((e) => {
+    setEditText(e.target.value);
+  });
 
   return (
     //ex. 'First article #GME #APL'
