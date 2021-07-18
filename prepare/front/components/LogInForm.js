@@ -44,7 +44,7 @@ const LogInForm = () => {
        } 
     }, [logInError]);    
     const onSubmitForm = useCallback(() => {
-        console.log(email, password);
+        //console.log(email, password);
         // setIsLoggedIn(true);
         
         dispatch(loginRequestAction({email, password}));

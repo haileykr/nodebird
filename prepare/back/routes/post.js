@@ -307,7 +307,7 @@ router.get("/:postId", async (req, res, next) => {
         },
       ],
     });
-    console.log(fullPost);
+    //console.log(fullPost);
     res.status(200).json(fullPost);
   } catch (error) {
     console.error(error);

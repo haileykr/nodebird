@@ -269,7 +269,7 @@ function unfollowAPI(data) {
 function* unfollow(action) {
   try {
     const result = yield call(unfollowAPI, action.data);
-    console.log(result)
+    //console.log(result)
     yield put({
       type: UNFOLLOW_SUCCESS,
 
@@ -293,7 +293,7 @@ function removeFollowerAPI(data) {
 function* removeFollower(action) {
   try {
     const result = yield call(removeFollowerAPI, action.data);
-    console.log(result)
+    //console.log(result)
     yield put({
       type:REMOVE_FOLLOWER_SUCCESS,
       data: result.data,
