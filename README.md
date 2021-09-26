@@ -6,6 +6,7 @@ Built with [React.js + Redux + Redux-Saga + Next.js] + [Node.js + MySQL] + [Ngin
 
 
 [WeSoodaa Web App](https://wesoodaa.site)
+(not in service at this moment)
 
 
 ![main_capture_page](./prepare/front/public/readMeImg/wesoodaa.png)
